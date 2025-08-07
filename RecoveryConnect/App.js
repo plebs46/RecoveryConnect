@@ -1,8 +1,8 @@
 import {NavigationContainer} from '@react-navigation/native';
 import {createStackNavigator} from '@react-navigation/stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import { Login, Cadastro, Escolha, Tutorial1, Tutorial2, Tutorial3, Tutorial4, Diario, DiarioNovo, ConsultasFuturas, InfMedico, Agendamento, ConsultasPassadas, Midia, Desafios, DesafiosNovo, Usuario, UsuarioDados, Notificacao } from './screens/index';
-import { MaterialCommunityIcons } from '@expo/vector-icons,';
+import { Login, Cadastro, Escolha, Tutorial1, Tutorial2, Tutorial3, Tutorial4, Diario, DiarioNovo, ConsultasFuturas, InfMedico, Agendamento, ConsultasPassadas, Midia, Desafios, DesafiosNovo, Usuario, UsuarioDados, Notificacao } from './screens/files';
+import { MaterialCommunityIcons } from '@expo/vector-icons';
 
 const Stack = createStackNavigator()
 const Tab = createBottomTabNavigator();
