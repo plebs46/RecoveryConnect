@@ -2,7 +2,7 @@ import { SafeAreaView, View, Text, TextInput, TouchableOpacity, Image, StyleShee
 import { useState } from 'react';
 import { Ionicons } from '@expo/vector-icons';
 
-export default function Login({ navigation }) {
+export default function OrgLogin({ navigation }) {
   const [showPassword, setShowPassword] = useState(false);
 
   return (
@@ -13,7 +13,7 @@ export default function Login({ navigation }) {
       />
 
       <Text style={est.title}>
-        Entre na sua conta!
+        Entre na sua conta de organização!
       </Text>
 
       <TextInput style={est.textBox} placeholder='E-mail' placeholderTextColor='lightGray' />
@@ -56,6 +56,10 @@ export default function Login({ navigation }) {
           </Text>
         </View>
       </View>
+
+      <TouchableOpacity style={{marginBottom: '50px'}} onPress={() => navigation.navigate("TipoUser")}>
+        <Text style={est.backButtonText}>Voltar à tela de seleção de perfil</Text>
+      </TouchableOpacity>
     </SafeAreaView>
   );
 }
@@ -78,6 +82,8 @@ const est = StyleSheet.create({
     fontSize: 24,
     fontWeight: 'bold',
     marginBottom: 20,
+    maxWidth: '70%',
+    textAlign: 'center',
   },
 
   esqueci: {
@@ -137,5 +143,10 @@ const est = StyleSheet.create({
     paddingLeft: 17,
     margin: 5,
     width: '80%',
+  },
+  backButtonText: {
+    fontFamily: 'Arial',
+    fontSize: 12,
+    color: '#ababab',
   },
 });

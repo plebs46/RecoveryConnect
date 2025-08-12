@@ -1,3 +1,5 @@
+import TipoUser from './tipoUser';
+
 import Login from './login';
 import Cadastro from './cadastro';
 import Escolha from './escolha';
@@ -18,7 +20,11 @@ import InfMedico from './infMedico';
 import Agendamento from './agendamento';
 import Notificacao from './notificacao';
 
+import OrgLogin from './orgLogin';
+
 export {
+  TipoUser,
+
   Login,
   Cadastro,
   Escolha,
@@ -44,4 +50,6 @@ export {
   Usuario,
   UsuarioDados,
   Notificacao,
+
+  OrgLogin,
 }
