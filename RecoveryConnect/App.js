@@ -1,7 +1,7 @@
 import {NavigationContainer} from '@react-navigation/native';
 import {createStackNavigator} from '@react-navigation/stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import { OrgLogin, TipoUser, Login, Cadastro, Escolha, Tutorial1, Tutorial2, Tutorial3, Tutorial4, Diario, DiarioNovo, ConsultasFuturas, InfMedico, Agendamento, ConsultasPassadas, Midia, Desafios, DesafiosNovo, Usuario, UsuarioDados, Notificacao } from './screens/files';
+import { OrgLogin, TipoUser, Login, Cadastro, Cadastro1, Escolha, Tutorial1, Tutorial2, Tutorial3, Tutorial4, Diario, DiarioNovo, ConsultasFuturas, InfMedico, Agendamento, ConsultasPassadas, Midia, Desafios, DesafiosNovo, Usuario, UsuarioDados, Notificacao } from './screens/files';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 
 const Stack = createStackNavigator()
@@ -29,6 +29,11 @@ export default function App() {
         <Stack.Screen
           name="Cadastro"
           component={Cadastro}
+          options={{headerShown:false}}
+        />
+        <Stack.Screen
+          name="Cadastro1"
+          component={Cadastro1}
           options={{headerShown:false}}
         />
         <Stack.Screen

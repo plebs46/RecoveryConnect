@@ -56,6 +56,10 @@ export default function Login({ navigation }) {
           </Text>
         </View>
       </View>
+
+      <TouchableOpacity style={{ marginBottom: '50px' }} onPress={() => navigation.navigate("TipoUser")}>
+        <Text style={est.backButtonText}>Voltar à tela de seleção de perfil</Text>
+      </TouchableOpacity>
     </SafeAreaView>
   );
 }
@@ -133,9 +137,15 @@ const est = StyleSheet.create({
     borderRadius: 10,
     borderWidth: 1,
     borderColor: 'gray',
-    padding: 10,
+    padding: 12,
     paddingLeft: 17,
     margin: 5,
     width: '80%',
+    marginVertical: 10,
+  },
+  backButtonText: {
+    fontFamily: 'Arial',
+    fontSize: 12,
+    color: '#ababab',
   },
 });

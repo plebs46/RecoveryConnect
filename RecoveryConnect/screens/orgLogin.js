@@ -135,14 +135,15 @@ const est = StyleSheet.create({
     height: 40,
     paddingHorizontal: 17,
   },
-  textBox: {
+  textBox:{
     borderRadius: 10,
     borderWidth: 1,
-    borderColor: 'gray',
-    padding: 10,
-    paddingLeft: 17,
-    margin: 5,
-    width: '80%',
+    borderColor:'gray',
+    padding:12,
+    paddingLeft:17,
+    margin:5,
+    width:'80%',
+    marginVertical: 10,
   },
   backButtonText: {
     fontFamily: 'Arial',

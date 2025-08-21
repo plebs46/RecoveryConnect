@@ -2,6 +2,7 @@ import TipoUser from './tipoUser';
 
 import Login from './login';
 import Cadastro from './cadastro';
+import Cadastro1 from './cadastro1';
 import Escolha from './escolha';
 import Tutorial1 from './tutorial1';
 import Tutorial2 from './tutorial2';
@@ -27,6 +28,7 @@ export {
 
   Login,
   Cadastro,
+  Cadastro1,
   Escolha,
 
   Tutorial1,
