@@ -9,7 +9,7 @@ export default function TipoUser({ navigation }) {
             navigation.navigate("Login");
             console.log('navegar');
         } else if (selectedProfile === 'organizacao') {
-            navigation.navigate("OrgLogin");
+            navigation.navigate("Org");
             console.log('navegar');
         }
     };

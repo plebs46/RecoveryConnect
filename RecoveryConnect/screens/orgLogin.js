@@ -46,7 +46,7 @@ export default function OrgLogin({ navigation }) {
           <Text style={est.textCadlog}>
             Ainda não possui uma conta?
           </Text>
-          <TouchableOpacity onPress={() => navigation.navigate("Cadastro")}>
+          <TouchableOpacity onPress={() => navigation.navigate("OrgCadastro1")}>
             <Text style={est.cadlogNav}>
               Cadastre-se
             </Text>

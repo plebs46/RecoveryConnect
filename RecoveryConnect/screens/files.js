@@ -22,6 +22,11 @@ import Agendamento from './agendamento';
 import Notificacao from './notificacao';
 
 import OrgLogin from './orgLogin';
+import OrgCadastro1 from './orgCadastro1';
+import OrgCadastro2 from './orgCadastro2';
+import OrgCadastro3 from './orgCadastro3';
+import OrgCadastro4 from './orgCadastro4';
+import OrgCadastro5 from './orgCadastro5';
 
 export {
   TipoUser,
@@ -54,4 +59,9 @@ export {
   Notificacao,
 
   OrgLogin,
+  OrgCadastro1,
+  OrgCadastro2,
+  OrgCadastro3,
+  OrgCadastro4,
+  OrgCadastro5,
 }
