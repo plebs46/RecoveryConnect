@@ -1,46 +1,156 @@
-import { SafeAreaView, View, Text, TextInput, TouchableOpacity, Image, StyleSheet } from 'react-native';
+import { ScrollView, View, Text, TouchableOpacity, Image, FlatList, StyleSheet } from 'react-native';
+import React, { useState } from "react";
+import CheckBox from '../components/CheckBox';
+import DateTimePicker from "@react-native-community/datetimepicker";
+
+const diasSemana = [
+    { id: "1", nome: "Segunda-feira" },
+    { id: "2", nome: "Terça-feira" },
+    { id: "3", nome: "Quarta-feira" },
+    { id: "4", nome: "Quinta-feira" },
+    { id: "5", nome: "Sexta-feira" },
+    { id: "6", nome: "Sábado" },
+    { id: "7", nome: "Domingo" },
+];
 
 export default function OrgCadastro4({ navigation }) {
+    const [dias, setDias] = useState(
+        diasSemana.map((d) => ({
+            ...d,
+            selecionado: false,
+            inicio: new Date(2023, 0, 1, 7, 0), // hora inicial padrão
+            fim: new Date(2023, 0, 1, 18, 0),   // hora final padrão
+            showInicio: false,
+            showFim: false,
+        }))
+    );
+
+    const toggleDia = (id) => {
+        setDias((prev) =>
+            prev.map((d) =>
+                d.id === id ? { ...d, selecionado: !d.selecionado } : d
+            )
+        );
+    };
+
+    const setHorario = (id, tipo, event, selectedDate) => {
+        if (event.type === "dismissed") return; // cancelado
+        setDias((prev) =>
+            prev.map((d) =>
+                d.id === id ? { ...d, [tipo]: selectedDate, showInicio: false, showFim: false } : d
+            )
+        );
+    };
+
+    const abrirPicker = (id, tipo) => {
+        setDias((prev) =>
+            prev.map((d) =>
+                d.id === id ? { ...d, [tipo === "inicio" ? "showInicio" : "showFim"]: true } : d
+            )
+        );
+    };
+
     return (
-        <SafeAreaView style={est.container}>
-            <View style={{ flexDirection: 'row', alignItems: 'center', marginTop: 100, marginBottom: 20 }}>
-                <TouchableOpacity onPress={() => navigation.goBack()}>
-                    <Image source={require('../assets/arrowLeft.png')} style={{ marginRight: 20 }} />
-                </TouchableOpacity>
-                <Text style={est.title}>
-                    Continue o cadastro!
-                </Text>
-            </View>
-            <Text style={{ fontSize: 16, marginBottom: 20, maxWidth: '80%', textAlign: 'center', fontWeight: 500 }}>
-                Insira o endereço da organização
-            </Text>
-
-            <TextInput style={est.textBox} placeholder='CEP' placeholderTextColor='lightGray' />
-            <TextInput style={est.textBox} placeholderTextColor='lightGray' placeholder="Rua" keyboardType="numeric" maxLength={10} />
-            <TextInput style={est.textBox} placeholder='Bairro' placeholderTextColor='lightGray' />
-            <TextInput style={est.textBox} placeholder='Número' placeholderTextColor='lightGray' />
-            <TextInput style={est.textBox} placeholder='Cidade' placeholderTextColor='lightGray' />
-            <TextInput style={est.textBox} placeholder='Estado' placeholderTextColor='lightGray' />
-
-            <View style={est.buttonContainer}>
-                <TouchableOpacity style={est.button} onPress={() => navigation.navigate("OrgCadastro3")}>
-                    <Text style={{ alignSelf: 'center', fontWeight: 'bold', }}>Etapa 2 de 5</Text>
-                </TouchableOpacity>
-                <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: '30%' }}>
-                    <Text style={est.textCadlog}>
-                        Já possui uma conta?
-                    </Text>
-                    <TouchableOpacity onPress={() => navigation.navigate("OrgLogin")}>
-                        <Text style={est.cadlogNav}>
-                            Entre
-                        </Text>
+        <ScrollView>
+            <View style={est.container}>
+                <View style={{ flexDirection: 'row', alignItems: 'center', marginTop: 70, marginBottom: 20 }}>
+                    <TouchableOpacity onPress={() => navigation.goBack()}>
+                        <Image source={require('../assets/arrowLeft.png')} style={{ marginRight: 20 }} />
                     </TouchableOpacity>
-                    <Text style={est.textCadlog}>
-                        agora!
+                    <Text style={est.title}>
+                        Estamos quase lá!
                     </Text>
                 </View>
+                <Text style={{ fontSize: 16, marginBottom: 20, maxWidth: '80%', textAlign: 'center', fontWeight: 500 }}>
+                    Informe os dias e horários de funcionamento da organização
+                </Text>
+                <Text style={[est.textCadlog, {marginBottom: 20}]}>
+                    (você pode definir horários diferentes para cada dia)
+                </Text>
+
+                {dias.map((item) => (
+                    <View key={item.id} style={est.card}>
+                        {/* Cabeçalho */}
+                        <View style={[
+                            est.cardHeader,
+                            { backgroundColor: item.selecionado ? "#5ce1e6" : "#e0e0e0" },
+                        ]}>
+                            <CheckBox
+                                value={item.selecionado}
+                                onChange={() => toggleDia(item.id)}
+                            />
+                            <Text style={est.diaTexto}>{item.nome}</Text>
+                        </View>
+
+                        {/* Corpo */}
+                        {item.selecionado && (
+                            <View style={est.cardBody}>
+                                <View style={est.col}>
+                                    <Text style={est.label}>Início</Text>
+                                    <TouchableOpacity
+                                        style={est.horaBox}
+                                        onPress={() => abrirPicker(item.id, "inicio")}
+                                    >
+                                        <Text style={est.horaTexto}>
+                                            {item.inicio.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}
+                                        </Text>
+                                    </TouchableOpacity>
+                                </View>
+
+                                <View style={est.col}>
+                                    <Text style={est.label}>Fim</Text>
+                                    <TouchableOpacity
+                                        style={est.horaBox}
+                                        onPress={() => abrirPicker(item.id, "fim")}
+                                    >
+                                        <Text style={est.horaTexto}>
+                                            {item.fim.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}
+                                        </Text>
+                                    </TouchableOpacity>
+                                </View>
+                            </View>
+                        )}
+
+                        {/* DatePickers */}
+                        {item.showInicio && (
+                            <DateTimePicker
+                                value={item.inicio}
+                                mode="time"
+                                is24Hour={true}
+                                onChange={(e, d) => setHorario(item.id, "inicio", e, d)}
+                            />
+                        )}
+                        {item.showFim && (
+                            <DateTimePicker
+                                value={item.fim}
+                                mode="time"
+                                is24Hour={true}
+                                onChange={(e, d) => setHorario(item.id, "fim", e, d)}
+                            />
+                        )}
+                    </View>
+                ))}
+
+                <View style={est.buttonContainer}>
+                    <TouchableOpacity style={est.button} onPress={() => navigation.navigate("OrgCadastro5")}>
+                        <Text style={{ alignSelf: 'center', fontWeight: 'bold', }}>Etapa 4 de 5</Text>
+                    </TouchableOpacity>
+                    <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: '30%' }}>
+                        <Text style={est.textCadlog}>
+                            Já possui uma conta?
+                        </Text>
+                        <TouchableOpacity onPress={() => navigation.navigate("OrgLogin")}>
+                            <Text style={est.cadlogNav}>
+                                Entre
+                            </Text>
+                        </TouchableOpacity>
+                        <Text style={est.textCadlog}>
+                            agora!
+                        </Text>
+                    </View>
+                </View>
             </View>
-        </SafeAreaView>
+        </ScrollView>
     );
 }
 
@@ -100,5 +210,53 @@ const est = StyleSheet.create({
         fontSize: 16,
         color: "#333",
     },
-
+    card: {
+        marginBottom: 16,
+        borderRadius: 12,
+        overflow: "hidden",
+        shadowColor: "#000",
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.1,
+        shadowRadius: 4,
+        elevation: 3,
+        width: '80%',
+    },
+    cardHeader: {
+        flexDirection: "row",
+        alignItems: "center",
+        backgroundColor: "#4dd0e1", // azul mais forte
+        padding: 12,
+    },
+    diaTexto: {
+        marginLeft: 8,
+        fontSize: 16,
+        fontWeight: "bold",
+        color: "#000",
+    },
+    cardBody: {
+        backgroundColor: "#e0f7fa", // azul claro
+        flexDirection: "row",
+        justifyContent: "space-around",
+        padding: 16,
+    },
+    col: {
+        alignItems: "center"
+    },
+    label: {
+        fontSize: 14,
+        marginBottom: 6,
+        fontWeight: "500"
+    },
+    horaBox: {
+        borderWidth: 1,
+        borderColor: "#ccc",
+        borderRadius: 6,
+        paddingVertical: 6,
+        paddingHorizontal: 12,
+        backgroundColor: "#fff",
+    },
+    horaTexto: {
+        fontSize: 16,
+        fontWeight: "bold"
+    },
 });

@@ -27,6 +27,11 @@ import OrgCadastro2 from './orgCadastro2';
 import OrgCadastro3 from './orgCadastro3';
 import OrgCadastro4 from './orgCadastro4';
 import OrgCadastro5 from './orgCadastro5';
+import OrgEspera from './orgEspera';
+import OrgPerfil from './orgPerfil';
+import OrgPerfilEdit from './orgPerfilEdit';
+import OrgPerfilDias from './orgPerfilDias';
+import OrgPerfilSenhaEdit from './orgPerfilSenhaEdit';
 
 export {
   TipoUser,
@@ -64,4 +69,9 @@ export {
   OrgCadastro3,
   OrgCadastro4,
   OrgCadastro5,
+  OrgEspera,
+  OrgPerfil,
+  OrgPerfilEdit,
+  OrgPerfilDias,
+  OrgPerfilSenhaEdit,
 }

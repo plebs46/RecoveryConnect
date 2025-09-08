@@ -3,7 +3,8 @@ import { createStackNavigator } from '@react-navigation/stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { OrgLogin, TipoUser, Login, Cadastro, Cadastro1, Escolha, Tutorial1, Tutorial2, Tutorial3, Tutorial4,
   Diario, DiarioNovo, ConsultasFuturas, InfMedico, Agendamento, ConsultasPassadas, Midia, Desafios, DesafiosNovo,
-  Usuario, UsuarioDados, Notificacao, OrgCadastro1, OrgCadastro2, OrgCadastro3, OrgCadastro4, OrgCadastro5
+  Usuario, UsuarioDados, Notificacao, OrgCadastro1, OrgCadastro2, OrgCadastro3, OrgCadastro4, OrgCadastro5, OrgEspera,
+  OrgPerfil, OrgPerfilEdit, OrgPerfilDias, OrgPerfilSenhaEdit,
 }from './screens/files';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 
@@ -251,6 +252,11 @@ function OrgStackNavigator() {
       <Stack.Screen name="OrgCadastro3" component={OrgCadastro3} />
       <Stack.Screen name="OrgCadastro4" component={OrgCadastro4} />
       <Stack.Screen name="OrgCadastro5" component={OrgCadastro5} />
+      <Stack.Screen name="OrgEspera" component={OrgEspera} />
+      <Stack.Screen name="OrgPerfil" component={OrgPerfil} />
+      <Stack.Screen name="OrgPerfilEdit" component={OrgPerfilEdit} />
+      <Stack.Screen name="OrgPerfilDias" component={OrgPerfilDias} />
+      <Stack.Screen name="OrgPerfilSenhaEdit" component={OrgPerfilSenhaEdit} />
     </Stack.Navigator>
   );
 }
