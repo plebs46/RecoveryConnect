@@ -42,7 +42,7 @@ export default function Login({ navigation }) {
         <TouchableOpacity style={est.button} onPress={() => navigation.navigate("Escolha")}>
           <Text style={{ alignSelf: 'center', fontWeight: 'bold', }}>Entrar</Text>
         </TouchableOpacity>
-        <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: '40%' }}>
+        <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 20 }}>
           <Text style={est.textCadlog}>
             Ainda não possui uma conta?
           </Text>
@@ -55,11 +55,10 @@ export default function Login({ navigation }) {
             agora!
           </Text>
         </View>
+        <TouchableOpacity style={{ marginBottom: '25%', padding: 20 }} onPress={() => navigation.navigate("TipoUser")}>
+          <Text style={est.backButtonText}>Voltar à tela de seleção de perfil</Text>
+        </TouchableOpacity>
       </View>
-
-      <TouchableOpacity style={{ marginBottom: '50px' }} onPress={() => navigation.navigate("TipoUser")}>
-        <Text style={est.backButtonText}>Voltar à tela de seleção de perfil</Text>
-      </TouchableOpacity>
     </SafeAreaView>
   );
 }

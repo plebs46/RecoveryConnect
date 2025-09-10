@@ -1,4 +1,4 @@
-import { ScrollView, View, Text, TouchableOpacity, Image, FlatList, StyleSheet } from 'react-native';
+import { ScrollView, View, Text, TouchableOpacity, Image, StyleSheet } from 'react-native';
 import React, { useState } from "react";
 import CheckBox from '../components/CheckBox';
 import DateTimePicker from "@react-native-community/datetimepicker";

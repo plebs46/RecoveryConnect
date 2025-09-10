@@ -10,9 +10,6 @@ Now: fazer a parte de cadastro das organizações. Terminar o front-end das inst
 • Tela de Login
 - "Esqueceu a senha?"
 
-• Tela de cadastro
-- Separar em duas telas para melhor organização e visualização
-
 • Escolha
 - Integração com banco de dados
 
@@ -30,10 +27,6 @@ Now: fazer a parte de cadastro das organizações. Terminar o front-end das inst
 - Integração com API Google Maps
 - Pesquisa de locais
 - Exibição de avaliações
-
-• Obras
-- Corrigir o título
-- Integração com banco de dados
 
 • Metas
 - Integração com banco de dados

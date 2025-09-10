@@ -39,10 +39,10 @@ export default function OrgLogin({ navigation }) {
       </View>
 
       <View style={est.buttonContainer}>
-        <TouchableOpacity style={est.button} onPress={() => navigation.navigate("Escolha")}>
+        <TouchableOpacity style={est.button} onPress={() => navigation.navigate("OrgPerfil")}>
           <Text style={{ alignSelf: 'center', fontWeight: 'bold', }}>Entrar</Text>
         </TouchableOpacity>
-        <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: '40%' }}>
+        <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 20 }}>
           <Text style={est.textCadlog}>
             Ainda não possui uma conta?
           </Text>
@@ -55,11 +55,12 @@ export default function OrgLogin({ navigation }) {
             agora!
           </Text>
         </View>
+        <TouchableOpacity style={{ marginBottom: '25%', padding: 20 }} onPress={() => navigation.navigate("TipoUser")}>
+          <Text style={est.backButtonText}>Voltar à tela de seleção de perfil</Text>
+        </TouchableOpacity>
       </View>
 
-      <TouchableOpacity style={{marginBottom: '50px'}} onPress={() => navigation.navigate("TipoUser")}>
-        <Text style={est.backButtonText}>Voltar à tela de seleção de perfil</Text>
-      </TouchableOpacity>
+
     </SafeAreaView>
   );
 }
@@ -135,14 +136,14 @@ const est = StyleSheet.create({
     height: 40,
     paddingHorizontal: 17,
   },
-  textBox:{
+  textBox: {
     borderRadius: 10,
     borderWidth: 1,
-    borderColor:'gray',
-    padding:12,
-    paddingLeft:17,
-    margin:5,
-    width:'80%',
+    borderColor: 'gray',
+    padding: 12,
+    paddingLeft: 17,
+    margin: 5,
+    width: '80%',
     marginVertical: 10,
   },
   backButtonText: {
