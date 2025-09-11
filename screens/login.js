@@ -1,9 +1,32 @@
 import { SafeAreaView, View, Text, TextInput, TouchableOpacity, Image, StyleSheet } from 'react-native';
 import { useState } from 'react';
-import { Ionicons } from '@expo/vector-icons';
+import { Ionicons } from '@expo/vector-icons';1
+import { supabase } from '../lib/supabase';
 
 export default function Login({ navigation }) {
   const [showPassword, setShowPassword] = useState(false);
+
+  const [email, setEmail] = useState('');
+  const [senha, setSenha] = useState('');
+  const [loading, setLoading] = useState(false);
+
+  async function handleSignIn() {
+    setLoading(true);
+
+    const { data, error } = await supabase.auth.signInWithPassword({
+      email: email,
+      password: senha,
+    });
+
+    if(error) {
+      alert('Erro ao entrar: ' + error.message);
+      setLoading(false);
+      return;
+    }
+
+    setLoading(false);
+    navigation.navigate('Escolha');
+  }
 
   return (
     <SafeAreaView style={est.container}>
@@ -16,10 +39,10 @@ export default function Login({ navigation }) {
         Entre na sua conta!
       </Text>
 
-      <TextInput style={est.textBox} placeholder='E-mail' placeholderTextColor='lightGray' />
+      <TextInput style={est.textBox} placeholder='E-mail' placeholderTextColor='lightGray' value={email} onChangeText={setEmail} />
 
       <View style={est.passwordContainer}>
-        <TextInput style={est.passwordInput} placeholder='Senha' placeholderTextColor='lightGray' secureTextEntry={!showPassword} />
+        <TextInput style={est.passwordInput} placeholder='Senha' placeholderTextColor='lightGray' secureTextEntry={!showPassword} value={senha} onChangeText={setSenha} />
         <TouchableOpacity
           style={est.eyeIcon}
           onPress={() => setShowPassword(!showPassword)}
@@ -39,8 +62,8 @@ export default function Login({ navigation }) {
       </View>
 
       <View style={est.buttonContainer}>
-        <TouchableOpacity style={est.button} onPress={() => navigation.navigate("Escolha")}>
-          <Text style={{ alignSelf: 'center', fontWeight: 'bold', }}>Entrar</Text>
+        <TouchableOpacity style={est.button} onPress={handleSignIn}>
+          <Text style={{ alignSelf: 'center', fontWeight: 'bold', }}>{loading ? 'Carregando...' : 'Entrar'}</Text>
         </TouchableOpacity>
         <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 20 }}>
           <Text style={est.textCadlog}>

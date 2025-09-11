@@ -1,7 +1,7 @@
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import { OrgLogin, TipoUser, Login, Cadastro, Cadastro1, Escolha, Tutorial1, Tutorial2, Tutorial3, Tutorial4,
+import { OrgLogin, TipoUser, Login, Cadastro, Escolha, Tutorial1, Tutorial2, Tutorial3, Tutorial4,
   Diario, DiarioNovo, ConsultasFuturas, InfMedico, Agendamento, Midia, Desafios, DesafiosNovo,
   Usuario, UsuarioDados, Notificacao, OrgCadastro1, OrgCadastro2, OrgCadastro3, OrgCadastro4, OrgCadastro5, OrgEspera,
   OrgPerfil, OrgPerfilEdit, OrgPerfilDias, OrgPerfilSenhaEdit,
@@ -33,11 +33,6 @@ export default function App() {
         <Stack.Screen
           name="Cadastro"
           component={Cadastro}
-          options={{ headerShown: false }}
-        />
-        <Stack.Screen
-          name="Cadastro1"
-          component={Cadastro1}
           options={{ headerShown: false }}
         />
         <Stack.Screen
