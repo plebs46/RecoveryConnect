@@ -3,18 +3,8 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 import {useState} from 'react';
 
 export default function ConsultasFuturas({navigation}) {
-  const data = Array.from({ length: 31 }, (_, i) => `${i + 1}`);
-
-  const renderItemDay = ({ item }) => (
-    <TouchableOpacity style={style.item} onPress={() => setDiaSelecionado(item)}>
-      <Text style={style.itemText}>{item}</Text>
-    </TouchableOpacity>
-  );
-
-  const [diaSelecionado, setDiaSelecionado] = useState(1);
-
-  const medPresentes = {
-   1: [
+  const medPresentes = 
+    [
       {
         id: 1,
         foto: require('../imagens/medico/mdc1.png'),
@@ -57,52 +47,7 @@ export default function ConsultasFuturas({navigation}) {
         hora: '9:00 - 18:00',
         formato: 'Online / Presencial',
       },
-    ],
-    2: [
-      {
-        id: 1,
-        foto: require('../imagens/medico/mdc5.png'),
-        rating: '⭐⭐⭐⭐⭐',
-        quantR: '(201)',
-        nome: 'Wedinilson Figueiredo Silva',
-        hosp: 'Psicologia Silva Santos',
-        endereco: 'R. Adelina Martins Piedade, 11 - Jardim Alvorada (Zona Oeste), São Paulo - SP, 05528-120',
-        valor: '190,90',
-        formacao: 'Faculdade de Medicina da Universidade de São Paulo',
-        dias: 'Segunda a Sexta',
-        hora: '10:00 - 18:00',
-        formato: 'Online',
-      },
-      {
-        id: 2,
-        foto: require('../imagens/medico/mdc1.png'),
-        rating: '⭐⭐⭐⭐⭐',
-        quantR: '(102)',
-        nome: 'Marcos Henrique Santos',
-        hosp: 'Psicologia Taboão da Serra',
-        endereco: 'Av. Vida Nova, 28 - 901 A, Jardim Maria Rosa, Taboão da Serra - SP, 06768-000',
-        valor: '180,00',
-        formacao: 'Faculdade de Medicina da Universidade de São Paulo',
-        dias: 'Domingo a Sexta',
-        hora: '9:00 - 18:00',
-        formato: 'Online / Presencial',
-      },
-      {
-        id: 3,
-        foto: require('../imagens/medico/mdc4.png'),
-        rating: '⭐⭐⭐⭐⭐',
-        quantR: '(309)',
-        nome: 'Ana Maria',
-        hosp: 'Hospital Equilíbrio',
-        endereco: 'R. Aldo Travaglia, 269 - Jardim Lar Sao Paulo, São Paulo - SP, 05639-120',
-        valor: '99,90',
-        formacao: 'Faculdade de Medicina da Universidade de São Paulo',
-        dias: 'Segunda a Sábado',
-        hora: '9:00 - 16:00',
-        formato: 'Online / Presencial',
-      },
-    ],
-  };
+    ];
 
   const renderItem = ({ item }) => (
     <TouchableOpacity style={style.card} onPress={() => handlePress(item)}>
@@ -129,43 +74,14 @@ export default function ConsultasFuturas({navigation}) {
 
   return (
     <View style={style.container}>
-      <View style={style.headerContainer}>
-        <TouchableOpacity
-          style={style.buttonInactive}
-          onPress={() => navigation.navigate('ConsultasFuturas')}
-          disabled={true}
-        >
-          <Text style={style.buttonText}>Agendamento</Text>
-        </TouchableOpacity>
-
-        <TouchableOpacity
-          style={style.buttonActive}
-          onPress={() => navigation.navigate('ConsultasPassadas')}
-        >
-          <Text style={style.buttonText}>Suas Consultas</Text>
-        </TouchableOpacity>
-      </View>
-
-      <Text style={style.title}>Escolha o melhor dia para você!</Text>
-      <Text style={style.month}>Janeiro, 2024</Text>
-      <FlatList
-        data={data}
-        renderItem={renderItemDay}
-        keyExtractor={(item, index) => index.toString()}
-        horizontal
-        showsHorizontalScrollIndicator={false}
-        contentContainerStyle={style.listContainer}
-      />
-
       <Text style={style.title}>Com quem você quer falar?</Text>
       <FlatList
+        data={medPresentes}
         style={{width: '90%', padding: 5}}
-        data={medPresentes[diaSelecionado]}
         keyExtractor={(item) => item.id}
         renderItem={renderItem}
         showsVerticalScrollIndicator={false}
       />
-
     </View>
   );
 }
@@ -183,6 +99,7 @@ const style = StyleSheet.create({
     backgroundColor: '#5ce1e6',
     borderRadius: 15,
     paddingTop: 50,
+    width: '100%'
   },
   buttonInactive: {
     flex: 1,

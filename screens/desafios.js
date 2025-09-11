@@ -1,29 +1,86 @@
-import {View, Text, TouchableOpacity, FlatList, StyleSheet, Dimensions} from 'react-native';
+import { View, Text, TouchableOpacity, FlatList, StyleSheet, Dimensions } from 'react-native';
 import { useState } from 'react';
+import { Calendar, LocaleConfig } from 'react-native-calendars';
 
-export default function Desafios({navigation}) {
+LocaleConfig.locales['pt'] = {
+  monthNames: [
+    'Janeiro',
+    'Fevereiro',
+    'Março',
+    'Abril',
+    'Maio',
+    'Junho',
+    'Julho',
+    'Agosto',
+    'Setembro',
+    'Outubro',
+    'Novembro',
+    'Dezembro',
+  ],
+  monthNamesShort: ['Jan.', 'Fev.', 'Mar.', 'Abr.', 'Mai.', 'Jun.', 'Jul.', 'Ago.', 'Set.', 'Out.', 'Nov.', 'Dez.'],
+  dayNames: ['Domingo', 'Segunda', 'Terça', 'Quarta', 'Quinta', 'Sexta', 'Sábado'],
+  dayNamesShort: ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sab'],
+  today: 'Hoje'
+};
+
+LocaleConfig.defaultLocale = 'pt';
+
+export default function Desafios({ navigation }) {
   const desafios = [
     {
       id: '1',
       titulo: 'Manter-se longe de cigarros por 7 dias',
       descricao: 'Ao longo da semana, conquiste a independência adotando o autocontrole na sua rotina.',
-      nivel: '⭐️⭐️'
+      nivel: '⭐️⭐️',
+      inicio: '2025-09-10',
+      fim: '2025-09-16',
     },
     {
       id: '2',
       titulo: 'Correr 5km na semana',
       descricao: 'Melhore sua resistência e fortaleça seu corpo correndo um total de 5km nesta semana.',
-      nivel: '⭐️⭐️⭐️'
+      nivel: '⭐️⭐️⭐️',
+      inicio: '2025-09-06',
+      fim: '2025-09-12',
     },
-    { 
+    {
       id: '3',
       titulo: 'Ler um livro por 15 minutos ao dia',
       descricao: 'Aumente seu conhecimento e relaxe a mente com a leitura diária.',
-      nivel: '⭐️'
+      nivel: '⭐️',
+      inicio: '2025-09-05',
+      fim: '2025-09-11',
     },
   ];
 
   const [desafioSelecionado, setDesafioSelecionado] = useState(desafios[0]);
+
+  const getMarkedDates = (inicio, fim) => {
+    let dates = {};
+    let current = new Date(inicio);
+    let last = new Date(fim);
+
+    while (current <= last) {
+      const dateStr = current.toISOString().split('T')[0];
+
+      dates[dateStr] = {
+        color: '#5ce1e6',
+        textColor: 'white',
+      };
+
+      current.setDate(current.getDate() + 1);
+    }
+
+    // marcar início e fim corretamente
+    if (dates[inicio]) {
+      dates[inicio].startingDay = true;
+    }
+    if (dates[fim]) {
+      dates[fim].endingDay = true;
+    }
+
+    return dates;
+  };
 
   return (
     <View style={style.container}>
@@ -43,12 +100,11 @@ export default function Desafios({navigation}) {
           <Text style={style.buttonText}>Desafios disponíveis</Text>
         </TouchableOpacity>
       </View>
-      
+
       <Text style={style.title}>Suas metas em progresso</Text>
 
-      <View>
+      <View style={{ flex: 1, width: '100%' }}>
         <FlatList
-          style={{flex: 1}}
           data={desafios}
           horizontal
           pagingEnabled
@@ -69,7 +125,19 @@ export default function Desafios({navigation}) {
           )}
         />
 
-        
+        <Calendar
+          style={{ height: '60%', marginBottom: 20 }}
+          onDayPress={(day) => {
+            console.log('Data selecionada', day.dateString);
+          }}
+          markingType={'period'}
+          markedDates={getMarkedDates(desafioSelecionado.inicio, desafioSelecionado.fim )}
+          theme={{
+            selectedDayBackgroundColor: '#00adf5',
+            todayTextColor: 'red',
+            arrowColor: 'blue',
+          }}
+        />
       </View>
     </View>
   );
@@ -78,16 +146,16 @@ export default function Desafios({navigation}) {
 const style = StyleSheet.create({
   container: {
     flex: 1,
-    flexDirection:'column',
+    flexDirection: 'column',
     backgroundColor: 'white',
-    alignItems:'center',
+    alignItems: 'center',
   },
 
   headerContainer: {
     flexDirection: 'row',
     backgroundColor: '#5ce1e6',
-    borderRadius: 15,
     paddingTop: 50,
+    width: '100%',
   },
   buttonInactive: {
     flex: 1,
@@ -107,7 +175,7 @@ const style = StyleSheet.create({
     fontWeight: 'bold',
   },
 
-  title:{
+  title: {
     fontSize: 24,
     fontWeight: 'bold',
     marginTop: 30,
@@ -117,10 +185,11 @@ const style = StyleSheet.create({
   desafioCard: {
     width: Dimensions.get('window').width * 0.8,
     padding: 20,
+    marginTop: 5,
     marginHorizontal: Dimensions.get('window').width * 0.1,
     height: 180,
     backgroundColor: '#fff',
-    borderRadius: 10,
+    borderRadius: 5,
     elevation: 3,
     alignItems: 'center',
     justifyContent: 'center',

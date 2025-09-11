@@ -130,8 +130,8 @@ const style = StyleSheet.create({
   headerContainer: {
     flexDirection: 'row',
     backgroundColor: '#5ce1e6',
-    borderRadius: 15,
     paddingTop: 50,
+    width: '100%',
   },
   buttonInactive: {
     flex: 1,

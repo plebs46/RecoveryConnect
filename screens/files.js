@@ -11,7 +11,6 @@ import Tutorial4 from './tutorial4';
 import Diario from './diario';
 import DiarioNovo from './diarioNovo';
 import ConsultasFuturas from './consultasFuturas';
-import ConsultasPassadas from './consultasPassadas';
 import Midia from './midia';
 import Desafios from './desafios';
 import DesafiosNovo from './desafiosNovo';
@@ -52,7 +51,6 @@ export {
   ConsultasFuturas,
   InfMedico,
   Agendamento,
-  ConsultasPassadas,
 
   Midia,
 

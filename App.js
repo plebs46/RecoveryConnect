@@ -2,7 +2,7 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { OrgLogin, TipoUser, Login, Cadastro, Cadastro1, Escolha, Tutorial1, Tutorial2, Tutorial3, Tutorial4,
-  Diario, DiarioNovo, ConsultasFuturas, InfMedico, Agendamento, ConsultasPassadas, Midia, Desafios, DesafiosNovo,
+  Diario, DiarioNovo, ConsultasFuturas, InfMedico, Agendamento, Midia, Desafios, DesafiosNovo,
   Usuario, UsuarioDados, Notificacao, OrgCadastro1, OrgCadastro2, OrgCadastro3, OrgCadastro4, OrgCadastro5, OrgEspera,
   OrgPerfil, OrgPerfilEdit, OrgPerfilDias, OrgPerfilSenhaEdit,
 }from './screens/files';
@@ -83,9 +83,13 @@ function MainTabNavigator() {
         tabBarShowLabel: false,
         tabBarActiveTintColor: '#5ce1e6',
         tabBarInactiveTintColor: 'gray',
+        tabBarIconStyle: { 
+          marginTop: 5,
+          width: 38,
+          height: 38, 
+        },
         tabBarStyle: {
           backgroundColor: '#ffffff',
-          height: 60,
           borderTopLeftRadius: 15,
           borderTopRightRadius: 15,
         },
@@ -189,11 +193,6 @@ function ConsultasStackNavigator() {
       <Stack.Screen
         name="Agendamento"
         component={Agendamento}
-        options={{ headerShown: false }}
-      />
-      <Stack.Screen
-        name="ConsultasPassadas"
-        component={ConsultasPassadas}
         options={{ headerShown: false }}
       />
     </Stack.Navigator>
