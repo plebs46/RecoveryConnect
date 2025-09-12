@@ -44,7 +44,7 @@ export default function OrgPerfil({ navigation }) {
         if (tempImage) {
             setClinicaData((prev) => ({
                 ...prev,
-                logo: tempImage, // salva de verdade no clinicaData
+                logo: tempImage, 
             }));
         }
         setTempImage(null);
@@ -52,7 +52,7 @@ export default function OrgPerfil({ navigation }) {
     };
 
     const handleCancelImage = () => {
-        setTempImage(null); // descarta a escolha
+        setTempImage(null); 
         setIsEditingImage(false);
     };
 
