@@ -1,187 +1,169 @@
-import {View, Text, TouchableOpacity, Image, StyleSheet, FlatList} from 'react-native';
-import Icon from 'react-native-vector-icons/FontAwesome';
-import {useState} from 'react';
+import React, { useState } from 'react';
+import { View, Text, FlatList, TouchableOpacity, StyleSheet, Image } from 'react-native';
+import MapView, { Marker } from 'react-native-maps';
 
-export default function ConsultasFuturas({navigation}) {
-  const medPresentes = 
-    [
-      {
-        id: 1,
-        foto: require('../imagens/medico/mdc1.png'),
-        rating: '⭐⭐⭐⭐⭐',
-        quantR: '(102)',
-        nome: 'Marcos Henrique Santos',
-        hosp: 'Psicologia Taboão da Serra',
-        endereco: 'Av. Vida Nova, 28 - 901 A, Jardim Maria Rosa, Taboão da Serra - SP, 06768-000',
-        valor: '180,00',
-        formacao: 'Faculdade de Medicina da Universidade de São Paulo',
-        dias: 'Domingo a Sexta',
-        hora: '9:00 - 18:00',
-        formato: 'Online / Presencial',
-      },
-      {
-        id: 2,
-        foto: require('../imagens/medico/mdc2.png'),
-        rating: '⭐⭐⭐⭐⭐',
-        quantR: '(284)',
-        nome: 'Laurêncio Gonzales Pinto',
-        hosp: 'Hospital Elma Mário',
-        endereco: 'Av. Armando de Andrade, 346, Parque Santos Dumont, Taboão da Serra - SP, 06754-210',
-        valor: '106,90',
-        formacao: 'Faculdade de Medicina da Universidade de São Paulo',
-        dias: 'Segunda a Sexta',
-        hora: '9:00 - 18:00',
-        formato: 'Online / Presencial',
-      },
-      {
-        id: 3,
-        foto: require('../imagens/medico/mdc3.png'),
-        rating: '⭐⭐⭐⭐⭐',
-        quantR: '(157)',
-        nome: 'Ana Maria Beto',
-        hosp: 'Hospital Santos Pereira',
-        endereco: 'Estr. São Francisco, 2008, Jardim Wanda, Taboão da Serra - SP, 06765-904',
-        valor: '74,99',
-        formacao: 'Faculdade de Medicina da Universidade de São Paulo',
-        dias: 'Segunda a Sábado',
-        hora: '9:00 - 18:00',
-        formato: 'Online / Presencial',
-      },
-    ];
+export default function ClinicasMapa() {
+  const [clinicaSelecionada, setClinicaSelecionada] = useState(null);
 
-  const renderItem = ({ item }) => (
-    <TouchableOpacity style={style.card} onPress={() => handlePress(item)}>
-      <View style={{flexDirection: 'column', alignItems: 'center', marginRight: 15}}>
-        <Image style={style.foto} source={item.foto}/>
-        <Text style={{fontSize: 14}}>{item.rating}</Text>
-        <Text style={style.rating}>{item.quantR}</Text>
-      </View>
-      <View style={{flexDirection: 'column'}}>
-        <Text style={style.nome}>{item.nome}</Text>
-        <Text style={style.text}>{item.hosp}</Text>
-        <View style={{flexDirection: 'row'}}>
-          <Icon name="map-marker" size={20} color="#E74C3C" style={{top: 5}}/>
-          <Text style={style.endereco}>{item.endereco}</Text>
-        </View>
-        <Text style={style.text}>R${item.valor}</Text>
-      </View>
-    </TouchableOpacity>
-  );
-
-  const handlePress = (medico) => {
-    navigation.navigate('InfMedico', { medico });
-  };
+  const clinicas = [
+    {
+      id: '1',
+      nome: 'AmorSaúde Taboão da Serra',
+      endereco: 'Av. Dr. José Maciel, 688 - Taboão da Serra',
+      latitude: -23.6017,
+      longitude: -46.7732,
+      telefone: '(11) 3132-8738',
+      diasDisponiveis: 'Segunda a Sexta',
+      horarioSemana: 'Segunda a Sexta 7:00 - 18:00',
+      avaliacao: '⭐⭐⭐ (367)',
+      imagem: require('../imagens/amor-saude-foto.jpeg'),
+    },
+    {
+      id: '2',
+      nome: 'Psicologia Taboão da Serra',
+      endereco: 'Av. Vida Nova, 28 - Taboão da Serra',
+      latitude: -23.6017,
+      longitude: -46.7732,
+      telefone: '(11) 98515-4367',
+      diasDisponiveis: 'Segunda a Sexta',
+      horarioSemana: 'Segunda a Sexta 8:00 - 21:00',
+      avaliacao: '⭐⭐⭐⭐⭐ (19)',
+      imagem: require('../imagens/psicoTaboao.png'),
+    },
+    {
+      id: '3',
+      nome: 'Clínica Master Health',
+      endereco: 'Rua B, 456 - Taboão da Serra',
+      latitude: -23.6017,
+      longitude: -46.7732,
+      telefone: '(11) 98515-4367',
+      diasDisponiveis: 'Domingo a Sexta',
+      horarioSemana: 'Segunda a Sexta 9:00 - 19:00',
+      avaliacao: '⭐⭐⭐⭐⭐ (280)',
+      imagem: require('../imagens/logoEx.png'),
+    },
+  ];
 
   return (
-    <View style={style.container}>
-      <Text style={style.title}>Com quem você quer falar?</Text>
-      <FlatList
-        data={medPresentes}
-        style={{width: '90%', padding: 5}}
-        keyExtractor={(item) => item.id}
-        renderItem={renderItem}
-        showsVerticalScrollIndicator={false}
-      />
+    <View style={styles.container}>
+      <Text style={styles.tituloLista}>Escolha uma clínica</Text>
+      {!clinicaSelecionada ? (
+        <FlatList
+          data={clinicas}
+          keyExtractor={(item) => item.id}
+          renderItem={({ item }) => (
+            <TouchableOpacity style={styles.card} onPress={() => setClinicaSelecionada(item)}>
+              <Image source={item.imagem} style={styles.imagemClinica} />
+              <Text style={styles.nome}>{item.nome}</Text>
+              <Text style={styles.endereco}>{item.endereco}</Text>
+              <Text style={styles.info}>📞 {item.telefone}</Text>
+              <Text style={styles.info}>🗓️ {item.diasDisponiveis}</Text>
+              <Text style={styles.info}>🕘 {item.horarioSemana}</Text>
+              <Text style={styles.info}>👍 {item.avaliacao}</Text>
+            </TouchableOpacity>
+          )}
+        />
+      ) : (
+        <View style={styles.mapaContainer}>
+          <Text style={styles.tituloMapa}>
+            Localização: {clinicaSelecionada.nome}
+          </Text>
+          <MapView
+            provider='google'
+            style={styles.mapa}
+            initialRegion={{
+              latitude: clinicaSelecionada.latitude,
+              longitude: clinicaSelecionada.longitude,
+              latitudeDelta: 0.01,
+              longitudeDelta: 0.01,
+            }}
+          >
+            <Marker
+              coordinate={{
+                latitude: clinicaSelecionada.latitude,
+                longitude: clinicaSelecionada.longitude,
+              }}
+              title={clinicaSelecionada.nome}
+              description={clinicaSelecionada.endereco}
+            />
+          </MapView>
+          <TouchableOpacity style={styles.botaoFechar} onPress={() => setClinicaSelecionada(null)}>
+            <Text style={styles.textoFechar}>Fechar mapa</Text>
+          </TouchableOpacity>
+        </View>
+      )}
     </View>
   );
 }
 
-const style = StyleSheet.create({
+const styles = StyleSheet.create({
   container: {
     flex: 1,
-    flexDirection:'column',
-    backgroundColor: 'white',
-    alignItems:'center',
+    paddingTop: 40,
+    backgroundColor: '#fff',
   },
-
-  headerContainer: {
-    flexDirection: 'row',
-    backgroundColor: '#5ce1e6',
-    borderRadius: 15,
-    paddingTop: 50,
-    width: '100%'
-  },
-  buttonInactive: {
-    flex: 1,
-    backgroundColor: 'white',
-    paddingVertical: 15,
-    alignItems: 'center',
-    marginRight: 5,
-  },
-  buttonActive: {
-    flex: 1,
-    backgroundColor: '#5ce1e6',
-    paddingVertical: 15,
-    alignItems: 'center',
-  },
-  buttonText: {
-    color: 'black',
+  tituloLista: {
+    fontSize: 22,
     fontWeight: 'bold',
+    textAlign: 'center',
+    marginVertical: 20,
+    color: '#444',
   },
-
-  listContainer: {
-    paddingVertical: 20,
-    paddingHorizontal: 30,
-  },
-  item: {
-    width: 40,
-    height: 40,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#e0f7fa',
-    marginHorizontal: 5,
-    borderRadius: 20,
-    padding: 10,
-  },
-  itemText: {
-    fontSize: 16,
-    fontWeight: 'bold',
-  },
-
-  title: {
-    fontWeight: 'bold',
-    fontSize: 20,
-    marginTop: 30,
-    marginBottom: 7.5,
-  },
-  month: {
-    fontSize: 16,
-    marginVertical: 7.5,
-  },
-
   card: {
-    padding: 10,
-    borderRadius: 20,
-    borderWidth: 1,
-    borderColor: '#c0c0c0',
-    marginVertical: 10,
-    width: '100%',
-    alignItems: 'center',
-    flexDirection: 'row',
-  },
-  foto: {
-    height: 70,
-    width: 70,
-    padding: 10,
-  },
-  rating: {
-    color: '#c0c0c0',
-    fontSize: 14,
-    marginTop: 5,
+    padding: 15,
+    marginHorizontal: 16,
+    marginVertical: 8,
+    backgroundColor: '#ffffff',
+    borderRadius: 10,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+    elevation: 3,
   },
   nome: {
-    fontWeight: 'bold',
     fontSize: 18,
-    marginVertical: 3,
-  },
-  text: {
-    fontSize: 16,
-    marginVertical: 3,
+    fontWeight: 'bold',
   },
   endereco: {
+    fontSize: 14,
+    color: '#555',
+  },
+  mapaContainer: {
+    flex: 1,
+    padding: 10,
+    backgroundColor: '#fff',
+  },
+  tituloMapa: {
     fontSize: 16,
-    marginVertical: 3,
-    width: '80%',
-    marginLeft: 3,
+    fontWeight: 'bold',
+    marginBottom: 10,
+    textAlign: 'center',
+  },
+  mapa: {
+    flex: 1,
+    borderRadius: 10,
+  },
+  botaoFechar: {
+    backgroundColor: '#5ce1e6',
+    padding: 12,
+    borderRadius: 8,
+    alignItems: 'center',
+    marginTop: 10,
+  },
+  textoFechar: {
+    color: 'white',
+    fontWeight: 'bold',
+  },
+  imagemClinica: {
+    width: '100%',
+    height: 150,
+    borderRadius: 8,
+    marginBottom: 10,
+  },
+  info: {
+    fontSize: 13,
+    color: '#444',
+    marginTop: 2,
   },
 });

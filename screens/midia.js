@@ -29,7 +29,7 @@ export default function Midia({navigation}) {
     {
       id: 1,
       imagem: require('../imagens/midia/nmd1.png'),
-      titulo: 'Health Tech Info',
+      titulo: 'Health Tech Info - Vape, cigarro, maconha e cocaína: o impacto na saúde',
       data: 'Setembro 2024',
       link: 'https://www.canva.com/design/DAGIfJdIpLQ/G9C1vq1x19FiNtJ1tzLIiQ/view?utm_content=DAGIfJdIpLQ&utm_campaign=designshare&utm_medium=link&utm_source=editor',
     },
