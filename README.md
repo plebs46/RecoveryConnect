@@ -3,13 +3,13 @@
 </h4>
 
 # :green_heart: RecoveryConnect
-Projeto de TCC do curso de Desenvolvimento de Sistemas na ETEC de Taboão da Serra. RecoveryConnect é um site que busca disseminar informações que melhorem a qualidade e o conhecimento geral da população sobre alimentação e tudo que a envolve.
-
-O site disponibilizará informações gerais sobre transtornos alimentares, segurança alimentar, alimentação saudável e educação alimentar, dados sobre a situação do Brasil nesse cenário, receitas fáceis e saudáveis, artigos e documentos elaborados pela equipe sobre a problemática e detalhes sobre o time e os projetos em desenvolvimento sobre esse assunto.
+Projeto de TCC do curso de Desenvolvimento de Sistemas na ETEC de Taboão da Serra. RecoveryConnect é um aplicativo que oferece apoio à recuperação, conectando dependentes químicos, seus familiares e amigos em uma rede de cuidado e suporte.
 
 # 🛠️ Funcionalidades do projeto
-- `Apresentar informações seguras`: o site exibe diversos dados e informações que foram averiguadas e divulgadas por especialistas da área da saúde e nutrição;
-- `Disponibizar artigos científicos`: o site disponilibizará diversos artigos ciéntificos de especialistas na área e da equipe responsável pelo projeto.
+- `Diário`: registre conquistas, desafios e reflexões para acompanhar de perto sua jornada de recuperação;
+- `Rede de apoio`: conecte-se a organizações cadastradas que oferecem suporte direto a quem precisa;
+- `Conteúdos informativos`: acesse materiais para compreender melhor sua situação ou a de alguém próximo;
+- `Metas`: acompanhe desafios que ajudam a orientar e fortalecer o processo de recuperação.
 
 # 📖 Visual do projeto
 - Link para o vídeo de apresentação: https://youtu.be/i9QZ7meoN4w
