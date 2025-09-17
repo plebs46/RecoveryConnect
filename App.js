@@ -2,7 +2,7 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { OrgLogin, TipoUser, Login, Cadastro, Escolha, Tutorial1, Tutorial2, Tutorial3, Tutorial4,
-  Diario, DiarioNovo, ConsultasFuturas, InfMedico, Agendamento, Midia, Desafios, DesafiosNovo,
+  Diario, DiarioNovo, ConsultasFuturas, InfMedico, Midia, Desafios, DesafiosNovo,
   Usuario, UsuarioDados, Notificacao, OrgCadastro1, OrgCadastro2, OrgCadastro3, OrgCadastro4, OrgCadastro5, OrgEspera,
   OrgPerfil, OrgPerfilEdit, OrgPerfilDias, OrgPerfilSenhaEdit,
 }from './screens/files';
@@ -109,7 +109,7 @@ function MainTabNavigator() {
         options={{
           tabBarIcon: ({ color }) => (
             <MaterialCommunityIcons
-              name={'medical-bag'}
+              name={'map-marker-outline'}
               size={38}
               color={color}
             />
@@ -183,11 +183,6 @@ function ConsultasStackNavigator() {
       <Stack.Screen
         name="InfMedico"
         component={InfMedico}
-        options={{ headerShown: false }}
-      />
-      <Stack.Screen
-        name="Agendamento"
-        component={Agendamento}
         options={{ headerShown: false }}
       />
     </Stack.Navigator>

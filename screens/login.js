@@ -1,6 +1,6 @@
 import { SafeAreaView, View, Text, TextInput, TouchableOpacity, Image, StyleSheet } from 'react-native';
 import { useState } from 'react';
-import { Ionicons } from '@expo/vector-icons';1
+import { Ionicons } from '@expo/vector-icons';
 import { supabase } from '../lib/supabase';
 
 export default function Login({ navigation }) {
@@ -18,8 +18,16 @@ export default function Login({ navigation }) {
       password: senha,
     });
 
-    if(error) {
+    if (error) {
       alert('Erro ao entrar: ' + error.message);
+      setLoading(false);
+      return;
+    }
+
+    const tipo = data.user?.user_metadata?.tipo_conta;
+
+    if (tipo !== 'paciente') {
+      alert('Erro ao entrar');
       setLoading(false);
       return;
     }

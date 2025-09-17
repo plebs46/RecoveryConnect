@@ -20,7 +20,14 @@ export default function OrgCadastro5({ navigation }) {
             </Text>
 
             <View style={est.passwordContainer}>
-                <TextInput style={est.passwordInput} placeholder='Crie sua Senha' placeholderTextColor='lightGray' secureTextEntry={!showPassword} />
+                <TextInput
+                    style={est.passwordInput}
+                    placeholder='Crie sua Senha'
+                    placeholderTextColor='lightGray'
+                    secureTextEntry={!showPassword}
+                    value={cadastro.senha || ''}
+                    onChange={(e) => setCampo('senha', e.target.value)}
+                />
                 <TouchableOpacity
                     style={est.eyeIcon}
                     onPress={() => setShowPassword(!showPassword)}
@@ -46,7 +53,7 @@ export default function OrgCadastro5({ navigation }) {
                 </TouchableOpacity>
             </View>
 
-            <View style={{ width:'60%', marginTop: 20, marginBottom: 30 }}>
+            <View style={{ width: '60%', marginTop: 20, marginBottom: 30 }}>
                 <Text style={est.senhaReq}>*Atenção! A senha deve conter:</Text>
                 <Text style={est.senhaReq}> - Ao mínimo 8 caracteres;</Text>
                 <Text style={est.senhaReq}> - Uma letra maiúscula;</Text>
@@ -60,7 +67,7 @@ export default function OrgCadastro5({ navigation }) {
             </Text>
 
             <View style={est.buttonContainer}>
-                <TouchableOpacity style={est.button} onPress={() => navigation.navigate("OrgEspera")}>
+                <TouchableOpacity style={est.button} onPress={navigation.navigate("OrgLogin")}>
                     <Text style={{ alignSelf: 'center', fontWeight: 'bold', }}>Finalizar</Text>
                 </TouchableOpacity>
                 <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: '30%' }}>

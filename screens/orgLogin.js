@@ -1,9 +1,40 @@
 import { SafeAreaView, View, Text, TextInput, TouchableOpacity, Image, StyleSheet } from 'react-native';
 import { useState } from 'react';
 import { Ionicons } from '@expo/vector-icons';
+import { supabase } from '../lib/supabase';
 
 export default function OrgLogin({ navigation }) {
   const [showPassword, setShowPassword] = useState(false);
+
+  const [email, setEmail] = useState('');
+  const [senha, setSenha] = useState('');
+  const [loading, setLoading] = useState(false);
+
+  async function handleSignInOrg() {
+    setLoading(true);
+
+    const { data, error } = await supabase.auth.signInWithPassword({
+      email: email,
+      password: senha,
+    });
+
+    if (error) {
+      alert('Erro ao entrar: ' + error.message);
+      setLoading(false);
+      return;
+    }
+
+    const tipo = data.user?.user_metadata?.tipo_conta;
+
+    if (tipo !== 'organizacao') {
+      alert('Erro ao entrar');
+      setLoading(false);
+      return;
+    }
+
+    setLoading(false);
+    navigation.navigate('OrgPerfil');
+  }
 
   return (
     <SafeAreaView style={est.container}>
@@ -16,10 +47,23 @@ export default function OrgLogin({ navigation }) {
         Entre na sua conta de organização!
       </Text>
 
-      <TextInput style={est.textBox} placeholder='E-mail' placeholderTextColor='lightGray' />
+      <TextInput
+        style={est.textBox}
+        placeholder='Email'
+        placeholderTextColor='lightGray'
+        value={email}
+        onChangeText={setEmail}
+      />
 
       <View style={est.passwordContainer}>
-        <TextInput style={est.passwordInput} placeholder='Senha' placeholderTextColor='lightGray' secureTextEntry={!showPassword} />
+        <TextInput
+          style={est.passwordInput}
+          placeholder='Senha'
+          placeholderTextColor='lightGray'
+          secureTextEntry={!showPassword}
+          value={senha}
+          onChangeText={setSenha}
+        />
         <TouchableOpacity
           style={est.eyeIcon}
           onPress={() => setShowPassword(!showPassword)}
@@ -39,8 +83,8 @@ export default function OrgLogin({ navigation }) {
       </View>
 
       <View style={est.buttonContainer}>
-        <TouchableOpacity style={est.button} onPress={() => navigation.navigate("OrgPerfil")}>
-          <Text style={{ alignSelf: 'center', fontWeight: 'bold', }}>Entrar</Text>
+        <TouchableOpacity style={est.button} onPress={handleSignInOrg}>
+          <Text style={{ alignSelf: 'center', fontWeight: 'bold', }}>{loading ? 'Carregando...' : 'Entrar'}</Text>
         </TouchableOpacity>
         <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 20 }}>
           <Text style={est.textCadlog}>

@@ -112,7 +112,7 @@ export default function DesafiosNovo({navigation}) {
 
 const getCategoriaStyle = (categoria) => {
   switch (categoria) {
-    case 'Restrição': return { borderColor: 'red' };
+    case 'Restrição': return { borderColor: '#5ce1e6' };
     case 'Atividade Física': return { borderColor: 'orange' };
     case 'Saúde Mental': return { borderColor: 'green' };
     default: return { borderColor: 'gray' };

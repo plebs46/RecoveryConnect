@@ -10,10 +10,9 @@ export default function ClinicasMapa() {
       id: '1',
       nome: 'AmorSaúde Taboão da Serra',
       endereco: 'Av. Dr. José Maciel, 688 - Taboão da Serra',
-      latitude: -23.6017,
-      longitude: -46.7732,
+      latitude: -23.612980560824774,
+      longitude: -46.76352812301982,
       telefone: '(11) 3132-8738',
-      diasDisponiveis: 'Segunda a Sexta',
       horarioSemana: 'Segunda a Sexta 7:00 - 18:00',
       avaliacao: '⭐⭐⭐ (367)',
       imagem: require('../imagens/amor-saude-foto.jpeg'),
@@ -22,10 +21,9 @@ export default function ClinicasMapa() {
       id: '2',
       nome: 'Psicologia Taboão da Serra',
       endereco: 'Av. Vida Nova, 28 - Taboão da Serra',
-      latitude: -23.6017,
-      longitude: -46.7732,
+      latitude: -23.60962169397969, 
+      longitude: -46.769529375695434,
       telefone: '(11) 98515-4367',
-      diasDisponiveis: 'Segunda a Sexta',
       horarioSemana: 'Segunda a Sexta 8:00 - 21:00',
       avaliacao: '⭐⭐⭐⭐⭐ (19)',
       imagem: require('../imagens/psicoTaboao.png'),
@@ -34,10 +32,9 @@ export default function ClinicasMapa() {
       id: '3',
       nome: 'Clínica Master Health',
       endereco: 'Rua B, 456 - Taboão da Serra',
-      latitude: -23.6017,
-      longitude: -46.7732,
+      latitude: -23.610616595326317, 
+      longitude: -46.75891965850886,
       telefone: '(11) 98515-4367',
-      diasDisponiveis: 'Domingo a Sexta',
       horarioSemana: 'Segunda a Sexta 9:00 - 19:00',
       avaliacao: '⭐⭐⭐⭐⭐ (280)',
       imagem: require('../imagens/logoEx.png'),
@@ -46,7 +43,7 @@ export default function ClinicasMapa() {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.tituloLista}>Escolha uma clínica</Text>
+      <Text style={styles.tituloLista}>Procure uma organização</Text>
       {!clinicaSelecionada ? (
         <FlatList
           data={clinicas}
@@ -57,7 +54,6 @@ export default function ClinicasMapa() {
               <Text style={styles.nome}>{item.nome}</Text>
               <Text style={styles.endereco}>{item.endereco}</Text>
               <Text style={styles.info}>📞 {item.telefone}</Text>
-              <Text style={styles.info}>🗓️ {item.diasDisponiveis}</Text>
               <Text style={styles.info}>🕘 {item.horarioSemana}</Text>
               <Text style={styles.info}>👍 {item.avaliacao}</Text>
             </TouchableOpacity>

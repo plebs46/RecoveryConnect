@@ -55,6 +55,20 @@ export default function Desafios({ navigation }) {
 
   const [desafioSelecionado, setDesafioSelecionado] = useState(desafios[0]);
 
+  const getHojeBrasilia = () => {
+    const hoje = new Date();
+    const brasiliaDate = hoje.toLocaleDateString('pt-BR', {
+      timeZone: 'America/Sao_Paulo',
+      year: 'numeric',
+      month: '2-digit',
+      day: '2-digit',
+    });
+
+    const [dia, mes, ano] = brasiliaDate.split('/');
+    return `${ano}-${mes}-${dia}`;
+  };
+
+
   const getMarkedDates = (inicio, fim) => {
     let dates = {};
     let current = new Date(inicio);
@@ -78,6 +92,13 @@ export default function Desafios({ navigation }) {
     if (dates[fim]) {
       dates[fim].endingDay = true;
     }
+
+    const hoje = getHojeBrasilia();
+    dates[hoje] = {
+      ...dates[hoje], // preserva se já estiver marcado
+      marked: true,
+      dotColor: 'red',
+    };
 
     return dates;
   };
@@ -131,7 +152,7 @@ export default function Desafios({ navigation }) {
             console.log('Data selecionada', day.dateString);
           }}
           markingType={'period'}
-          markedDates={getMarkedDates(desafioSelecionado.inicio, desafioSelecionado.fim )}
+          markedDates={getMarkedDates(desafioSelecionado.inicio, desafioSelecionado.fim)}
           theme={{
             selectedDayBackgroundColor: '#00adf5',
             todayTextColor: 'red',

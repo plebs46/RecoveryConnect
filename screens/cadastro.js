@@ -25,6 +25,7 @@ export default function Cadastro({ navigation }) {
       password: senha,
       options: {
         data: {
+          tipo_conta: 'paciente',
           nome_usuario: nome,
           data_nascimento: dataNascimento,
           cpf: cpf,
@@ -35,14 +36,25 @@ export default function Cadastro({ navigation }) {
       }
     })
 
-    if (error) {
+    if (!error) {
+      await supabase.from('clientes').insert({
+        user_id: data.user.id,
+        nome_usuario: nome,
+        data_nascimento: dataNascimento,
+        cpf: cpf,
+        cidade: cidade,
+        telefone: telefone,
+        senha: senha,
+      });
+
+      setLoading(false);
+      navigation.navigate('Login');
+    }
+    else {
       Alert.alert('Erro ao cadastrar', error.message);
       setLoading(false);
       return;
     }
-
-    setLoading(false);
-    navigation.navigate('Login');
   }
 
   return (
@@ -106,7 +118,7 @@ export default function Cadastro({ navigation }) {
               placeholder='Crie sua Senha'
               placeholderTextColor='lightGray'
               secureTextEntry={!showPassword}
-              value={senha} 
+              value={senha}
               onChangeText={setSenha}
             />
             <TouchableOpacity

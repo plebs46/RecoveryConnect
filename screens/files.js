@@ -16,7 +16,6 @@ import DesafiosNovo from './desafiosNovo';
 import Usuario from './usuario';
 import UsuarioDados from './usuarioDados';
 import InfMedico from './infMedico';
-import Agendamento from './agendamento';
 import Notificacao from './notificacao';
 
 import OrgLogin from './orgLogin';
@@ -48,7 +47,6 @@ export {
 
   ConsultasFuturas,
   InfMedico,
-  Agendamento,
 
   Midia,
 
