@@ -1,159 +1,115 @@
-import {View, Text, TouchableOpacity, TextInput, StyleSheet} from 'react-native';
-import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+import { View, Text, TouchableOpacity, TextInput, StyleSheet, Image } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useState } from 'react';
 
-export default function UsuarioDados({navigation}) {
-  const user = [
-    {
-      nome: 'José Augusto',
-      dataNascimento: '05/09/1965',
-      email: 'jose.augusto@gmail.com',
-      tel: '11 99451-8648',
-      cidade: 'Taboão da Serra',
-      cpf: '084.415.811-03',
-    },
-  ];
-
+export default function UsuarioDados({ navigation }) {
   const [showPassword, setShowPassword] = useState(false);
 
   return (
-    <View style={style.container}>
-      <View style={style.header}/>
+    <View style={est.container}>
+      <View style={est.header} />
 
-      <View style={{marginTop: 30, width: '80%', flexDirection: 'row', alignItems: 'center'}}>
-        <TouchableOpacity style={{padding: 10, marginRight: 10}} onPress={()=>navigation.navigate("Usuario")}>
-          <Icon
-            name={'arrow-left'}
-            size={30}
-          />
+      <View style={{ flexDirection: 'row', alignItems: 'center', width: '80%', marginTop: 50, marginBottom: 20 }}>
+        <TouchableOpacity onPress={() => navigation.goBack()}>
+          <Image source={require('../assets/arrowLeft.png')} style={{ marginRight: 20 }} />
         </TouchableOpacity>
-        <Text style={style.title}>Seus dados</Text>
-      </View>
-      
-      <View style={{width:'80%'}}>
-        <Text style={style.inputLabel}>Nome</Text>
-        <TextInput style={style.textBox} value={user[0].nome} editable={false}/>
-      </View>
-      <View style={{width:'80%'}}>
-        <Text style={style.inputLabel}>Data de nascimento</Text>
-        <TextInput style={style.textBox} value={user[0].dataNascimento} editable={false}/>
-      </View>
-      <View style={{width:'80%'}}>
-        <Text style={style.inputLabel}>Email</Text>
-        <TextInput style={style.textBox} value={user[0].email} editable={false}/>
-      </View>
-      <View style={{width:'80%'}}>
-        <Text style={style.inputLabel}>Telefone</Text>
-        <TextInput style={style.textBox} value={user[0].tel} editable={false}/>
-      </View>
-      <View style={{width:'80%'}}>
-        <Text style={style.inputLabel}>Cidade</Text>
-        <TextInput style={style.textBox} value={user[0].cidade} editable={false}/>
-      </View>
-      <View style={{width:'80%'}}>
-        <Text style={style.inputLabel}>CPF</Text>
-        <TextInput style={style.textBox} value={user[0].cpf} editable={false}/>
+        <Text style={est.title}>
+          Alterar senha
+        </Text>
       </View>
 
-      <View style={style.line}/>
+      <View style={{ width: '100%', marginBottom: 30, alignItems: 'center' }}>
+        <Text style={est.label}>Senha atual</Text>
+        <View style={est.passwordContainer}>
+          <TextInput style={est.passwordInput} placeholder='Digite sua senha atual' placeholderTextColor='lightGray' secureTextEntry={!showPassword} />
+          <TouchableOpacity
+            style={est.eyeIcon}
+            onPress={() => setShowPassword(!showPassword)}
+          >
+            <Ionicons
+              name={showPassword ? "eye-off" : "eye"}
+              size={24}
+              color="gray"
+            />
+          </TouchableOpacity>
+        </View>
 
-      <View style={{width:'80%'}}>
-        <Text style={style.inputLabel}>Alterar senha</Text>
-        <View style={style.passwordContainer}>
-          <TextInput style={style.passwordInput} placeholder='Senha atual' placeholderTextColor='lightGray' secureTextEntry={!showPassword}/>
-          <TouchableOpacity 
-            style={style.eyeIcon} 
+        <View style={{ width: '80%', flexDirection: 'row-reverse', }}>
+          <TouchableOpacity style={est.esqueci}>
+            <Text style={{ color: '#ababab' }}>Esqueci minha senha</Text>
+          </TouchableOpacity>
+        </View>
+      </View>
+
+      <View style={{ width: '100%', marginBottom: 10, alignItems: 'center' }}>
+        <Text style={est.label}>Nova senha</Text>
+        <View style={est.passwordContainer}>
+          <TextInput style={est.passwordInput} placeholder='Digite a nova senha' placeholderTextColor='lightGray' secureTextEntry={!showPassword} />
+          <TouchableOpacity
+            style={est.eyeIcon}
             onPress={() => setShowPassword(!showPassword)}
           >
-            <Ionicons 
+            <Ionicons
               name={showPassword ? "eye-off" : "eye"}
-              size={24} 
-              color="gray" 
+              size={24}
+              color="gray"
             />
           </TouchableOpacity>
         </View>
-        <View style={style.passwordContainer}>
-          <TextInput style={style.passwordInput} placeholder='Sua Nova Senha' placeholderTextColor='lightGray' secureTextEntry={!showPassword}/>
-          <TouchableOpacity 
-            style={style.eyeIcon} 
+        <View style={est.passwordContainer}>
+          <TextInput style={est.passwordInput} placeholder='Confirme a nova senha' placeholderTextColor='lightGray' secureTextEntry={!showPassword} />
+          <TouchableOpacity
+            style={est.eyeIcon}
             onPress={() => setShowPassword(!showPassword)}
           >
-            <Ionicons 
+            <Ionicons
               name={showPassword ? "eye-off" : "eye"}
-              size={24} 
-              color="gray" 
-            />
-          </TouchableOpacity>
-        </View>
-        <View style={style.passwordContainer}>
-          <TextInput style={style.passwordInput} placeholder='Confirme sua Nova Senha' placeholderTextColor='lightGray' secureTextEntry={!showPassword}/>
-          <TouchableOpacity 
-            style={style.eyeIcon} 
-            onPress={() => setShowPassword(!showPassword)}
-          >
-            <Ionicons 
-              name={showPassword ? "eye-off" : "eye"}
-              size={24} 
-              color="gray" 
+              size={24}
+              color="gray"
             />
           </TouchableOpacity>
         </View>
       </View>
-      <TouchableOpacity style={style.button}>
-        <Text style={{alignSelf:'center',fontWeight:'bold',}}>Alterar</Text>
-      </TouchableOpacity>
+
+      <View style={{ width: '60%', marginTop: 20, marginBottom: 30 }}>
+        <Text style={est.senhaReq}>*Atenção! A senha deve conter:</Text>
+        <Text style={est.senhaReq}> - Ao mínimo 8 caracteres;</Text>
+        <Text style={est.senhaReq}> - Uma letra maiúscula;</Text>
+        <Text style={est.senhaReq}> - Uma letra minúscula;</Text>
+        <Text style={est.senhaReq}> - Um número;</Text>
+        <Text style={est.senhaReq}> - Um caractere especial (@, #, $ etc).</Text>
+      </View>
+
+      <View style={est.buttonContainer}>
+        <TouchableOpacity style={est.button} onPress={salvarDados}>
+          <Text style={{ alignSelf: 'center', fontWeight: 'bold', }}>Salvar</Text>
+        </TouchableOpacity>
+      </View>
     </View>
   );
 }
 
-const style = StyleSheet.create({
+function salvarDados() {
+  alert("Senha atualizada!");
+}
+
+const est = StyleSheet.create({
   container: {
     flex: 1,
-    flexDirection:'column',
+    flexDirection: 'column',
     backgroundColor: 'white',
-    alignItems:'center',
+    alignItems: 'center',
   },
   header: {
-    backgroundColor: '#5ce1e6',
-    height: 50,
     width: '100%',
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 1 },
-    shadowOpacity: 0.25,
-    shadowRadius: 3.84,
-    elevation: 4,
+    backgroundColor: '#5CE1E6',
+    height: 70,
+    elevation: 5,
   },
-  title:{
+  title: {
     fontSize: 24,
     fontWeight: 'bold',
   },
-
-  inputLabel: {
-    fontSize: 14,
-    color: '#333333',
-    lineHeight: 24,
-    marginHorizontal: 15,
-    marginTop: 5,
-  },
-  textBox:{
-    borderRadius: 10,
-    borderWidth: 1,
-    borderColor:'gray',
-    padding:5,
-    paddingLeft:17,
-    marginHorizontal:5,
-    width:'100%',
-    color: '#333333'
-  },
-
-  line: {
-    backgroundColor: '#333333',
-    height: 1,
-    width: '80%',
-    margin: 15,
-  },
-
   eyeIcon: {
     paddingHorizontal: 10,
   },
@@ -162,8 +118,8 @@ const style = StyleSheet.create({
     alignItems: 'center',
     borderRadius: 10,
     borderWidth: 1,
-    borderColor:'gray',
-    width: '100%',
+    borderColor: 'gray',
+    width: '80%',
     margin: 5,
   },
   passwordInput: {
@@ -171,12 +127,30 @@ const style = StyleSheet.create({
     height: 40,
     paddingHorizontal: 17,
   },
-
-  button:{
-    backgroundColor:'#5ce1e6',
-    borderRadius:100,
+  label: {
+    fontWeight: 'bold',
+    color: '#333',
+    width: '80%',
+  },
+  senhaReq: {
+    fontSize: 12,
+    color: 'gray',
+    textAlign: 'left',
+    marginBottom: 2,
+  },
+  button: {
+    backgroundColor: '#5ce1e6',
+    borderRadius: 100,
     padding: 10,
-    width:'60%',
+    width: '100%',
     marginTop: 30,
+    marginBottom: 120,
+  },
+
+  buttonContainer: {
+    width: '80%',
+    flex: 1,
+    justifyContent: 'flex-end',
+    alignItems: 'center',
   },
 });

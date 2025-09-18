@@ -85,7 +85,6 @@ export default function Desafios({ navigation }) {
       current.setDate(current.getDate() + 1);
     }
 
-    // marcar início e fim corretamente
     if (dates[inicio]) {
       dates[inicio].startingDay = true;
     }
@@ -95,7 +94,7 @@ export default function Desafios({ navigation }) {
 
     const hoje = getHojeBrasilia();
     dates[hoje] = {
-      ...dates[hoje], // preserva se já estiver marcado
+      ...dates[hoje],
       marked: true,
       dotColor: 'red',
     };

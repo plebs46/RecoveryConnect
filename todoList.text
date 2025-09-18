@@ -1,12 +1,5 @@
 A Fazer
 
-Now: fazer a parte de cadastro das organizações. Terminar o front-end das instituições.
-
-• Front-end da parte da instituição
-
-• Tela de Login e Cadastro 
-- Integração com banco de dados
-
 • Tela de Login
 - "Esqueceu a senha?"
 
@@ -23,12 +16,9 @@ Now: fazer a parte de cadastro das organizações. Terminar o front-end das inst
 - Exibir o botão de "Escrever" apenas quando não estiver escrito no dia
 
 • Instituições
-- Front-end inteiro
 - Integração com API Google Maps
 - Pesquisa de locais
 - Exibição de avaliações
 
 • Metas
 - Integração com banco de dados
-- Correção da cor das "Restrições"
-- Calendário funcional

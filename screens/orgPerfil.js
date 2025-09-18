@@ -1,5 +1,5 @@
 import { View, Text, Image, StyleSheet, TouchableOpacity, ScrollView, TextInput, Modal } from 'react-native';
-import { Entypo, Ionicons, MaterialIcons } from '@expo/vector-icons';
+import { Ionicons, MaterialIcons } from '@expo/vector-icons';
 import React, { useState } from "react";
 import * as ImagePicker from 'expo-image-picker';
 
