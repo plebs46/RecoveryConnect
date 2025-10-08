@@ -1,10 +1,11 @@
-import { SafeAreaView, View, Text, TextInput, TouchableOpacity, Image, StyleSheet, ScrollView, Alert } from 'react-native';
+import { View, Text, TextInput, TouchableOpacity, Image, StyleSheet } from 'react-native';
+import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import { Dropdown } from 'react-native-element-dropdown';
 import React, { useState } from 'react';
 import { Ionicons } from '@expo/vector-icons';
 import { MaskedTextInput } from 'react-native-mask-text';
-import { supabase } from '../lib/supabase';
+import { useSignup } from '../context/UserSignupContext';
 
 const data = [
     { label: 'Clínica pública', value: 'clinica-publica' },
@@ -16,18 +17,19 @@ const data = [
 export default function OrgCadastro1({ navigation }) {
     const [showPassword, setShowPassword] = useState(false);
 
-    const [nome, setNome] = useState('');
-    const [tipo, setTipo] = useState('');
-    const [cnpj, setCnpj] = useState('');
-    const [email, setEmail] = useState('');
-    const [telefone, setTelefone] = useState('');
-    const [senha, setSenha] = useState('');
-    const [loading, setLoading] = useState(false);
+    const {
+        nome, setNome,
+        tipo, setTipo,
+        cnpj, setCnpj,
+        email, setEmail,
+        telefone, setTelefone,
+        rede_social, setRede_social,
+        senha, setSenha
+    } = useSignup();
+
 
     async function handleSignUpOrg() {
-        setLoading(true);
-
-        const { data, error } = await supabase.auth.signUp({
+        /* const { data, error } = await supabase.auth.signUp({
             email: email,
             password: senha,
             options: {
@@ -37,6 +39,7 @@ export default function OrgCadastro1({ navigation }) {
                     tipo: tipo,
                     cnpj: cnpj,
                     email: email,
+                    rede_social: rede_social,
                     telefone: telefone,
                     senha: senha,
                 }
@@ -51,27 +54,28 @@ export default function OrgCadastro1({ navigation }) {
                 cnpj: cnpj,
                 email: email,
                 telefone: telefone,
+                rede_social: rede_social,
                 senha: senha,
             });
 
-            setLoading(false);
             navigation.navigate('OrgCadastro2');
         }
         else {
             Alert.alert('Erro ao cadastrar', error.message);
-            setLoading(false);
             return;
-        }
+        }*/
+        navigation.navigate('OrgCadastro2');
     }
 
     return (
-        <SafeAreaView style={{ flex: 1 }}>
-            <KeyboardAwareScrollView
-                enableOnAndroid={true}
-                extraScrollHeight={20}
-                contentContainerStyle={est.scrollContent}
-                showsVerticalScrollIndicator={false}
-            >
+        <SafeAreaProvider>
+            <SafeAreaView style={{ flex: 1 }}>
+                <KeyboardAwareScrollView
+                    enableOnAndroid={true}
+                    extraScrollHeight={20}
+                    contentContainerStyle={est.scrollContent}
+                    showsVerticalScrollIndicator={false}
+                >
                     <Image
                         source={require('../imagens/RecoveryConnect.png')}
                         style={est.logo}
@@ -137,6 +141,13 @@ export default function OrgCadastro1({ navigation }) {
                         placeholderTextColor="lightGray"
                         keyboardType="numeric"
                     />
+                    <TextInput
+                        style={est.textBox}
+                        placeholder='Rede Social (opcional)'
+                        placeholderTextColor='lightGray'
+                        value={rede_social}
+                        onChangeText={setRede_social}
+                    />
                     <View style={est.passwordContainer}>
                         <TextInput
                             style={est.passwordInput}
@@ -173,18 +184,21 @@ export default function OrgCadastro1({ navigation }) {
 
 
                     <TouchableOpacity style={est.button} onPress={handleSignUpOrg}>
-                        <Text style={{ alignSelf: 'center', fontWeight: 'bold', }}>{loading ? 'Carregando...' : 'Etapa 1 de 4'}</Text>
+                        <Text style={{ alignSelf: 'center', fontWeight: 'bold', }}>Etapa 1 de 4</Text>
                     </TouchableOpacity>
 
                     <View style={est.loginRow}>
                         <Text style={est.textCadlog}>Já possui uma conta?</Text>
                         <TouchableOpacity onPress={() => navigation.navigate('Login')}>
                             <Text style={est.cadlogNav}>Entre</Text>
+                        </TouchableOpacity><TouchableOpacity onPress={() => navigation.navigate('OrgCadastro2')}>
+                            <Text style={est.cadlogNav}>Passar</Text>
                         </TouchableOpacity>
                         <Text style={est.textCadlog}>agora!</Text>
                     </View>
-            </KeyboardAwareScrollView>
-        </SafeAreaView>
+                </KeyboardAwareScrollView>
+            </SafeAreaView>
+        </SafeAreaProvider>
     );
 }
 

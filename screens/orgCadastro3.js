@@ -1,12 +1,13 @@
-import { SafeAreaView, View, Text, TextInput, TouchableOpacity, Image, StyleSheet } from 'react-native';
+import { View, Text, TouchableOpacity, Image, StyleSheet } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import * as ImagePicker from 'expo-image-picker';
 import React, { useState } from 'react';
-import * as DocumentPicker from 'expo-document-picker';
-import { Ionicons } from '@expo/vector-icons';
+import { supabase } from '../lib/supabase';
+import { useSignup } from '../context/UserSignupContext';
 
 export default function OrgCadastro3({ navigation }) {
+    const { foto, setFoto } = useSignup();
     const [image, setImage] = useState(require('../assets/imgBase.png'));
-    const [fileName, setFileName] = useState(null);
 
     const pickImage = async () => {
         let result = await ImagePicker.launchImageLibraryAsync({
@@ -17,16 +18,37 @@ export default function OrgCadastro3({ navigation }) {
         })
 
         if (!result.canceled) {
-            setImage(result.assets[0].uri)
+            const asset = result.assets[0];
+            setImage(asset.uri);
+            await uploadImage(asset.uri);
         }
     }
 
-    const pickDocument = async () => {
-        let result = await DocumentPicker.getDocumentAsync({});
-        if (!result.canceled && result.assets && result.assets.length > 0) {
-            setFileName(result.assets[0].name);
-        } else if (result.name) {
-            setFileName(result.name);
+    const uploadImage = async (uri) => {
+        try {
+            const response = await fetch(uri);
+            const arrayBuffer = await response.arrayBuffer();
+            const fileName = `${Date.now()}.jpg`;
+            const file = new Uint8Array(arrayBuffer);
+
+            const { data, error } = await supabase.storage
+                .from('org_imagens')
+                .upload(fileName, file, { contentType: 'image/jpeg' });
+
+            if (error) throw error;
+
+            const { data: urlData } = supabase.storage
+                .from('org_imagens')
+                .getPublicUrl(fileName);
+
+            if (urlData && urlData.publicUrl) {
+                setFoto(urlData.publicUrl);
+                console.log('✅ URL da imagem:', urlData.publicUrl);
+            } else {
+                console.log('❌ Não foi possível obter a URL pública');
+            }
+        } catch (err) {
+            console.error('Erro ao enviar imagem:', err);
         }
     };
 
@@ -54,26 +76,12 @@ export default function OrgCadastro3({ navigation }) {
                 </TouchableOpacity>
             </View>
 
-            <Text style={{ fontSize: 16, marginTop: 15, maxWidth: '80%', textAlign: 'center', fontWeight: 500 }}>
-                Adicione uma Rede Social
-            </Text>
-            <TextInput style={est.textBox} placeholder='@exemplo' placeholderTextColor='lightGray' />
-
-            <Text style={{ fontSize: 16, marginTop: 15, maxWidth: '80%', textAlign: 'center', fontWeight: 500 }}>
-                Anexe o estatuto social (opcional)
-            </Text>
-            <View style={est.attachContainer}>
-                <Text style={est.attachText} numberOfLines={1} ellipsizeMode="tail">
-                    {fileName ? fileName : 'Nenhum arquivo anexado'}
-                </Text>
-                <TouchableOpacity style={est.attachButton} onPress={pickDocument}>
-                    <Ionicons name="add" size={28} color="white" />
-                </TouchableOpacity>
-            </View>
-
             <View style={est.buttonContainer}>
                 <TouchableOpacity style={est.button} onPress={() => navigation.navigate("OrgCadastro4")}>
                     <Text style={{ alignSelf: 'center', fontWeight: 'bold', }}>Etapa 3 de 4</Text>
+                </TouchableOpacity>
+                <TouchableOpacity style={est.button}>
+                    <Text style={{ alignSelf: 'center', fontWeight: 'bold', }}>Enviar</Text>
                 </TouchableOpacity>
                 <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: '30%' }}>
                     <Text style={est.textCadlog}>

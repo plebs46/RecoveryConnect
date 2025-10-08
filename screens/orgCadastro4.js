@@ -3,6 +3,10 @@ import React, { useState } from "react";
 import CheckBox from '../components/CheckBox';
 import DateTimePicker from "@react-native-community/datetimepicker";
 
+//Teste de contexto
+import { useSignup } from '../context/UserSignupContext';
+//Fim teste de contexto
+
 const diasSemana = [
     { id: "1", nome: "Segunda-feira" },
     { id: "2", nome: "Terça-feira" },
@@ -14,6 +18,20 @@ const diasSemana = [
 ];
 
 export default function OrgCadastro4({ navigation }) {
+    //Teste de contexto
+    const {
+        nome, tipo, cnpj, email, telefone, rede_social, senha, foto
+    } = useSignup();
+
+    const handleLog = () => {
+        console.log('🧾 Informações finais:');
+        console.log({
+            nome, tipo, cnpj, email, telefone, rede_social, senha, foto
+        });
+    };
+
+    //Fim teste de contexto
+
     const [dias, setDias] = useState(
         diasSemana.map((d) => ({
             ...d,
@@ -64,7 +82,7 @@ export default function OrgCadastro4({ navigation }) {
                 <Text style={{ fontSize: 16, marginBottom: 20, maxWidth: '80%', textAlign: 'center', fontWeight: 500 }}>
                     Informe os dias e horários de funcionamento da organização
                 </Text>
-                <Text style={[est.textCadlog, {marginBottom: 20}]}>
+                <Text style={[est.textCadlog, { marginBottom: 20 }]}>
                     (você pode definir horários diferentes para cada dia)
                 </Text>
 
@@ -132,6 +150,12 @@ export default function OrgCadastro4({ navigation }) {
                 ))}
 
                 <View style={est.buttonContainer}>
+                    {/* Teste de contexto */}
+                    <TouchableOpacity style={est.button} onPress={handleLog}>
+                        <Text style={{ alignSelf: 'center', fontWeight: 'bold', }}>Testar</Text>
+                    </TouchableOpacity>
+                    {/* Fim Teste de contexto */}
+
                     <TouchableOpacity style={est.button} onPress={() => navigation.navigate("OrgEspera")}>
                         <Text style={{ alignSelf: 'center', fontWeight: 'bold', }}>Finalizar</Text>
                     </TouchableOpacity>

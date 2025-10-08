@@ -1,4 +1,5 @@
-import { SafeAreaView, View, Text, TouchableOpacity, Image, StyleSheet } from 'react-native';
+import { View, Text, TouchableOpacity, Image, StyleSheet } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 export default function OrgEspera({ navigation }) {
     return (

@@ -1,72 +1,76 @@
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import { OrgLogin, TipoUser, Login, Cadastro, Escolha, Tutorial1, Tutorial2, Tutorial3, Tutorial4,
+import {
+  OrgLogin, TipoUser, Login, Cadastro, Escolha, Tutorial1, Tutorial2, Tutorial3, Tutorial4,
   Diario, DiarioNovo, ConsultasFuturas, InfMedico, Midia, Desafios, DesafiosNovo,
   Usuario, UsuarioDados, Notificacao, OrgCadastro1, OrgCadastro2, OrgCadastro3, OrgCadastro4, OrgCadastro5, OrgEspera,
   OrgPerfil, OrgPerfilEdit, OrgPerfilDias, OrgPerfilSenhaEdit,
-}from './screens/files';
+} from './screens/files';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
+import { UserSignupProvider } from './context/UserSignupContext';
 
 const Stack = createStackNavigator()
 const Tab = createBottomTabNavigator();
 
 export default function App() {
   return (
-    <NavigationContainer>
-      <Stack.Navigator initialRouteName="TipoUser">
-        <Stack.Screen
-          name="TipoUser"
-          component={TipoUser}
-          options={{ headerShown: false }}
-        />
-        <Stack.Screen
-          name="Org"
-          component={OrgStackNavigator}
-          options={{ headerShown: false }}
-        />
-        <Stack.Screen
-          name="Login"
-          component={Login}
-          options={{ headerShown: false }}
-        />
-        <Stack.Screen
-          name="Cadastro"
-          component={Cadastro}
-          options={{ headerShown: false }}
-        />
-        <Stack.Screen
-          name="Escolha"
-          component={Escolha}
-          options={{ headerShown: false }}
-        />
-        <Stack.Screen
-          name="Tutorial1"
-          component={Tutorial1}
-          options={{ headerShown: false }}
-        />
-        <Stack.Screen
-          name="Tutorial2"
-          component={Tutorial2}
-          options={{ headerShown: false }}
-        />
-        <Stack.Screen
-          name="Tutorial3"
-          component={Tutorial3}
-          options={{ headerShown: false }}
-        />
-        <Stack.Screen
-          name="Tutorial4"
-          component={Tutorial4}
-          options={{ headerShown: false }}
-        />
-        <Stack.Screen
-          name="Main"
-          component={MainTabNavigator}
-          options={{ headerShown: false }}
-        />
-      </Stack.Navigator>
-    </NavigationContainer>
+    <UserSignupProvider>
+      <NavigationContainer>
+        <Stack.Navigator initialRouteName="TipoUser">
+          <Stack.Screen
+            name="TipoUser"
+            component={TipoUser}
+            options={{ headerShown: false }}
+          />
+          <Stack.Screen
+            name="Org"
+            component={OrgStackNavigator}
+            options={{ headerShown: false }}
+          />
+          <Stack.Screen
+            name="Login"
+            component={Login}
+            options={{ headerShown: false }}
+          />
+          <Stack.Screen
+            name="Cadastro"
+            component={Cadastro}
+            options={{ headerShown: false }}
+          />
+          <Stack.Screen
+            name="Escolha"
+            component={Escolha}
+            options={{ headerShown: false }}
+          />
+          <Stack.Screen
+            name="Tutorial1"
+            component={Tutorial1}
+            options={{ headerShown: false }}
+          />
+          <Stack.Screen
+            name="Tutorial2"
+            component={Tutorial2}
+            options={{ headerShown: false }}
+          />
+          <Stack.Screen
+            name="Tutorial3"
+            component={Tutorial3}
+            options={{ headerShown: false }}
+          />
+          <Stack.Screen
+            name="Tutorial4"
+            component={Tutorial4}
+            options={{ headerShown: false }}
+          />
+          <Stack.Screen
+            name="Main"
+            component={MainTabNavigator}
+            options={{ headerShown: false }}
+          />
+        </Stack.Navigator>
+      </NavigationContainer>
+    </UserSignupProvider>
   )
 }
 
@@ -78,10 +82,10 @@ function MainTabNavigator() {
         tabBarShowLabel: false,
         tabBarActiveTintColor: '#5ce1e6',
         tabBarInactiveTintColor: 'gray',
-        tabBarIconStyle: { 
+        tabBarIconStyle: {
           marginTop: 5,
           width: 38,
-          height: 38, 
+          height: 38,
         },
         tabBarStyle: {
           backgroundColor: '#ffffff',
@@ -230,6 +234,7 @@ function UsuarioStackNavigator() {
 
 function OrgStackNavigator() {
   return (
+
     <Stack.Navigator
       screenOptions={{
         headerShown: false,

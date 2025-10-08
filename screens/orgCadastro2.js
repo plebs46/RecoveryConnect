@@ -1,46 +1,49 @@
-import { SafeAreaView, View, Text, TextInput, TouchableOpacity, Image, StyleSheet } from 'react-native';
+import { View, Text, TextInput, TouchableOpacity, Image, StyleSheet } from 'react-native';
+import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
 
 export default function OrgCadastro2({ navigation }) {
     return (
-        <SafeAreaView style={est.container}>
-            <View style={{ flexDirection: 'row', alignItems: 'center', marginTop: 70, marginBottom: 20 }}>
-                <TouchableOpacity onPress={() => navigation.goBack()}>
-                    <Image source={require('../assets/arrowLeft.png')} style={{ marginRight: 20 }} />
-                </TouchableOpacity>
-                <Text style={est.title}>
-                    Continue o cadastro!
-                </Text>
-            </View>
-            <Text style={{ fontSize: 16, marginBottom: 20, maxWidth: '80%', textAlign: 'center', fontWeight: 500 }}>
-                Insira o endereço da organização
-            </Text>
-
-            <TextInput style={est.textBox} placeholder='CEP' placeholderTextColor='lightGray' />
-            <TextInput style={est.textBox} placeholderTextColor='lightGray' placeholder="Rua" keyboardType="numeric" maxLength={10} />
-            <TextInput style={est.textBox} placeholder='Bairro' placeholderTextColor='lightGray' />
-            <TextInput style={est.textBox} placeholder='Número' placeholderTextColor='lightGray' />
-            <TextInput style={est.textBox} placeholder='Cidade' placeholderTextColor='lightGray' />
-            <TextInput style={est.textBox} placeholder='Estado' placeholderTextColor='lightGray' />
-
-            <View style={est.buttonContainer}>
-                <TouchableOpacity style={est.button} onPress={() => navigation.navigate("OrgCadastro3")}>
-                    <Text style={{ alignSelf: 'center', fontWeight: 'bold', }}>Etapa 2 de 4</Text>
-                </TouchableOpacity>
-                <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: '30%' }}>
-                    <Text style={est.textCadlog}>
-                        Já possui uma conta?
-                    </Text>
-                    <TouchableOpacity onPress={() => navigation.navigate("OrgLogin")}>
-                        <Text style={est.cadlogNav}>
-                            Entre
-                        </Text>
+        <SafeAreaProvider>
+            <SafeAreaView style={est.container}>
+                <View style={{ flexDirection: 'row', alignItems: 'center', marginTop: 70, marginBottom: 20 }}>
+                    <TouchableOpacity onPress={() => navigation.goBack()}>
+                        <Image source={require('../assets/arrowLeft.png')} style={{ marginRight: 20 }} />
                     </TouchableOpacity>
-                    <Text style={est.textCadlog}>
-                        agora!
+                    <Text style={est.title}>
+                        Continue o cadastro!
                     </Text>
                 </View>
-            </View>
-        </SafeAreaView>
+                <Text style={{ fontSize: 16, marginBottom: 20, maxWidth: '80%', textAlign: 'center', fontWeight: 500 }}>
+                    Insira o endereço da organização
+                </Text>
+
+                <TextInput style={est.textBox} placeholder='CEP' placeholderTextColor='lightGray' />
+                <TextInput style={est.textBox} placeholderTextColor='lightGray' placeholder="Rua" keyboardType="numeric" maxLength={10} />
+                <TextInput style={est.textBox} placeholder='Bairro' placeholderTextColor='lightGray' />
+                <TextInput style={est.textBox} placeholder='Número' placeholderTextColor='lightGray' />
+                <TextInput style={est.textBox} placeholder='Cidade' placeholderTextColor='lightGray' />
+                <TextInput style={est.textBox} placeholder='Estado' placeholderTextColor='lightGray' />
+
+                <View style={est.buttonContainer}>
+                    <TouchableOpacity style={est.button} onPress={() => navigation.navigate("OrgCadastro3")}>
+                        <Text style={{ alignSelf: 'center', fontWeight: 'bold', }}>Etapa 2 de 4</Text>
+                    </TouchableOpacity>
+                    <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: '30%' }}>
+                        <Text style={est.textCadlog}>
+                            Já possui uma conta?
+                        </Text>
+                        <TouchableOpacity onPress={() => navigation.navigate("OrgLogin")}>
+                            <Text style={est.cadlogNav}>
+                                Entre
+                            </Text>
+                        </TouchableOpacity>
+                        <Text style={est.textCadlog}>
+                            agora!
+                        </Text>
+                    </View>
+                </View>
+            </SafeAreaView>
+        </SafeAreaProvider>
     );
 }
 
