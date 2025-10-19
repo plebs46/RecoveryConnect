@@ -2,10 +2,8 @@ import { ScrollView, View, Text, TouchableOpacity, Image, StyleSheet } from 'rea
 import React, { useState } from "react";
 import CheckBox from '../components/CheckBox';
 import DateTimePicker from "@react-native-community/datetimepicker";
-
-//Teste de contexto
+import { supabase } from '../lib/supabase';
 import { useSignup } from '../context/UserSignupContext';
-//Fim teste de contexto
 
 const diasSemana = [
     { id: "1", nome: "Segunda-feira" },
@@ -18,19 +16,50 @@ const diasSemana = [
 ];
 
 export default function OrgCadastro4({ navigation }) {
-    //Teste de contexto
+    const [loading, setLoading] = useState(false);
+
     const {
         nome, tipo, cnpj, email, telefone, rede_social, senha, foto
     } = useSignup();
 
-    const handleLog = () => {
-        console.log('🧾 Informações finais:');
-        console.log({
-            nome, tipo, cnpj, email, telefone, rede_social, senha, foto
-        });
-    };
+    async function handleLog() {
+        setLoading(true);
 
-    //Fim teste de contexto
+        const { data, error } = await supabase.auth.signUp({
+            email: email,
+            password: senha,
+            options: {
+                data: {
+                    tipo_conta: 'organizacao',
+                    nome,
+                    tipo,
+                    cnpj,
+                    telefone,
+                    rede_social,
+                    imagem_perfil: foto,
+                }
+            }
+        });
+        if (!error) {
+            await supabase.from('organizacao').insert({
+                codigo: data.user.id,
+                nome: nome,
+                email: email,
+                tipo: tipo,
+                cnpj: cnpj,
+                imagem_perfil: foto,
+                rede_social: rede_social,
+                telefone: telefone,
+            });
+            setLoading(false);
+            navigation.navigate('OrgEspera');
+        }
+        else {
+            Alert.alert('Erro ao cadastrar', error.message);
+            setLoading(false);
+            return;
+        }
+    };
 
     const [dias, setDias] = useState(
         diasSemana.map((d) => ({
@@ -150,14 +179,8 @@ export default function OrgCadastro4({ navigation }) {
                 ))}
 
                 <View style={est.buttonContainer}>
-                    {/* Teste de contexto */}
-                    <TouchableOpacity style={est.button} onPress={handleLog}>
-                        <Text style={{ alignSelf: 'center', fontWeight: 'bold', }}>Testar</Text>
-                    </TouchableOpacity>
-                    {/* Fim Teste de contexto */}
-
                     <TouchableOpacity style={est.button} onPress={() => navigation.navigate("OrgEspera")}>
-                        <Text style={{ alignSelf: 'center', fontWeight: 'bold', }}>Finalizar</Text>
+                        <Text style={{ alignSelf: 'center', fontWeight: 'bold', }}>{loading ? 'Carregando...' : 'Finalizar'}</Text>
                     </TouchableOpacity>
                     <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: '30%' }}>
                         <Text style={est.textCadlog}>

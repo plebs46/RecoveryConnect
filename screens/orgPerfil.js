@@ -1,7 +1,49 @@
-import { View, Text, Image, StyleSheet, TouchableOpacity, ScrollView, TextInput, Modal } from 'react-native';
+import { View, Text, Image, StyleSheet, TouchableOpacity, ScrollView, TextInput, Modal, Alert } from 'react-native';
 import { Ionicons, MaterialIcons } from '@expo/vector-icons';
 import React, { useState } from "react";
 import * as ImagePicker from 'expo-image-picker';
+import { supabase } from '../lib/supabase';
+
+async function deleteAccount() {
+    const sessionTest = await supabase.auth.getSession();
+    console.log("Sessão atual:", sessionTest);
+    const {
+        data: { user },
+    } = await supabase.auth.getUser();
+    console.log("Get user...");
+
+    if (!user) return Alert.alert('Erro', 'Usuário não autenticado');
+    console.log("Usuário encontrado...");
+
+    const session = await supabase.auth.getSession();
+    const token = session.data.session.access_token;
+
+    console.log("Token obtido:", token);
+
+    try {
+        const res = await fetch(
+            'https://gntknwmgxgvgxffxdwin.supabase.co/functions/v1/delete-org-account',
+            {
+                method: 'POST',
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                },
+            }
+        );
+
+        const data = await res.json();
+
+        if (res.ok) {
+            Alert.alert('Conta excluída com sucesso!');
+            await supabase.auth.signOut();
+        } else {
+            Alert.alert('Erro', data.error || 'Falha ao excluir conta.');
+        }
+    } catch (err) {
+        console.error(err);
+        Alert.alert('Erro inesperado', err.message);
+    }
+}
 
 export default function OrgPerfil({ navigation }) {
     const [clinicaData, setClinicaData] = useState({
@@ -24,7 +66,7 @@ export default function OrgPerfil({ navigation }) {
         ],
     });
 
-    {/* Editar Imagem */}
+    {/* Editar Imagem */ }
     const [isEditingImage, setIsEditingImage] = useState(false);
     const [tempImage, setTempImage] = useState(null);
     const pickImage = async () => {
@@ -44,7 +86,7 @@ export default function OrgPerfil({ navigation }) {
         if (tempImage) {
             setClinicaData((prev) => ({
                 ...prev,
-                logo: tempImage, 
+                logo: tempImage,
             }));
         }
         setTempImage(null);
@@ -52,11 +94,11 @@ export default function OrgPerfil({ navigation }) {
     };
 
     const handleCancelImage = () => {
-        setTempImage(null); 
+        setTempImage(null);
         setIsEditingImage(false);
     };
 
-    {/* Editar Dados */}
+    {/* Editar Dados */ }
     const { nome, logo, tipo, cnpj } = clinicaData;
 
     const [isEditing, setIsEditing] = useState(null);
@@ -110,6 +152,9 @@ export default function OrgPerfil({ navigation }) {
         </View>
     );
 
+    const [logoutConfirm, setLogoutConfirm] = useState(false);
+    const [deleteConfirm, setDeleteConfirm] = useState(false);
+
     return (
         <ScrollView>
             <View style={est.container}>
@@ -162,6 +207,20 @@ export default function OrgPerfil({ navigation }) {
                     data={clinicaData.endereco}
                     sectionKey="endereco"
                 />
+
+                <Text style={est.subtitle}>Sua conta</Text>
+                <View style={{ width: '80%', marginBottom: 20 }}>
+                    <Text style={[est.label, { color: '#c40101ff' }]}>Sair da conta</Text>
+                    <TouchableOpacity style={[est.logoutBox, est.buttonContainer]} onPress={() => setLogoutConfirm(true)}>
+                        <Text style={{ color: '#c40101ff' }}>Sair</Text>
+                    </TouchableOpacity>
+                </View>
+                <View style={{ width: '80%', marginBottom: 20 }}>
+                    <Text style={[est.label, { color: '#c40101ff' }]}>Excluir conta</Text>
+                    <TouchableOpacity style={[est.logoutBox, est.buttonContainer]} onPress={() => setDeleteConfirm(true)}>
+                        <Text style={{ color: '#c40101ff' }}>Deletar conta de organização</Text>
+                    </TouchableOpacity>
+                </View>
 
                 <Modal visible={showModal} transparent animationType="fade">
                     <View style={est.modalOverlay}>
@@ -225,6 +284,44 @@ export default function OrgPerfil({ navigation }) {
                                 </TouchableOpacity>
                                 <TouchableOpacity onPress={handleSaveImage} style={est.saveBtn}>
                                     <Text style={{ paddingHorizontal: 5 }}>Salvar</Text>
+                                </TouchableOpacity>
+                            </View>
+                        </View>
+                    </View>
+                </Modal>
+
+                <Modal visible={logoutConfirm} transparent animationType="fade">
+                    <View style={est.overlay}>
+                        <View style={est.popup}>
+                            <Text style={est.popupTitulo}>Deseja realmente sair da sua conta?</Text>
+                            <Text style={est.mensagem}>Você precisará efetuar o login novamente para acessar sua conta.</Text>
+
+                            <View style={est.popupBotoes}>
+                                <TouchableOpacity onPress={() => setLogoutConfirm(false)} style={est.cancelar}>
+                                    <Text>Cancelar</Text>
+                                </TouchableOpacity>
+
+                                <TouchableOpacity style={est.confirmar}>
+                                    <Text style={{ color: 'white' }}>Sair</Text>
+                                </TouchableOpacity>
+                            </View>
+                        </View>
+                    </View>
+                </Modal>
+
+                <Modal visible={deleteConfirm} transparent animationType="fade">
+                    <View style={est.overlay}>
+                        <View style={est.popup}>
+                            <Text style={est.popupTitulo}>Tem certeza que quer excluir sua conta?</Text>
+                            <Text style={est.mensagem}>Essa ação não pode ser desfeita.</Text>
+
+                            <View style={est.popupBotoes}>
+                                <TouchableOpacity onPress={() => setDeleteConfirm(false)} style={est.cancelar}>
+                                    <Text>Cancelar</Text>
+                                </TouchableOpacity>
+
+                                <TouchableOpacity style={est.confirmar} onPress={deleteAccount}>
+                                    <Text style={{ color: 'white' }}>Deletar</Text>
                                 </TouchableOpacity>
                             </View>
                         </View>
@@ -299,6 +396,16 @@ const est = StyleSheet.create({
         marginVertical: 10,
         flexDirection: 'row'
     },
+    logoutBox: {
+        borderRadius: 10,
+        borderWidth: 1,
+        borderColor: '#c40101ff',
+        padding: 12,
+        margin: 5,
+        width: '95%',
+        marginVertical: 10,
+        flexDirection: 'row'
+    },
     buttonContainer: {
         alignItems: 'center',
         justifyContent: 'space-between',
@@ -338,5 +445,42 @@ const est = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'center',
         marginTop: 20
+    },
+    overlay: {
+        flex: 1,
+        backgroundColor: 'rgba(0,0,0,0.6)',
+        alignItems: 'center',
+        justifyContent: 'center'
+    },
+    popup: {
+        backgroundColor: 'white',
+        borderRadius: 12,
+        padding: 20,
+        paddingVertical: 25,
+        width: '80%'
+    },
+    popupTitulo: {
+        fontSize: 18,
+        fontWeight: 'bold',
+        marginBottom: 10
+    },
+    mensagem: {
+        marginBottom: 20,
+        fontSize: 15
+    },
+    popupBotoes: {
+        flexDirection: 'row',
+        justifyContent: 'space-between'
+    },
+    cancelar: {
+        padding: 10,
+        backgroundColor: '#eee',
+        borderRadius: 8
+    },
+    confirmar: {
+        padding: 10,
+        paddingHorizontal: 20,
+        backgroundColor: 'red',
+        borderRadius: 8
     },
 });

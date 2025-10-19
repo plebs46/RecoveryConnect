@@ -210,7 +210,7 @@ export default function Usuario({ navigation }) {
         </View>
         <View style={{ width: '80%', marginBottom: 60 }}>
           <Text style={[style.label, {color: '#dd0505'}]}>Sair</Text>
-          <TouchableOpacity style={[style.textBox, style.buttonContainer, {borderColor: '#dd0505'}]}>
+          <TouchableOpacity style={[style.textBox, style.buttonContainer, {borderColor: '#dd0505'}]} onPress={() => navigation.navigate('TipoUser')}>
             <Text style={{color: '#dd0505'}}>Sair da conta</Text>
             <Ionicons name="log-out-outline" size={20} color="#dd0505ff" />
           </TouchableOpacity>

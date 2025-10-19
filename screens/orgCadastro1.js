@@ -189,10 +189,8 @@ export default function OrgCadastro1({ navigation }) {
 
                     <View style={est.loginRow}>
                         <Text style={est.textCadlog}>Já possui uma conta?</Text>
-                        <TouchableOpacity onPress={() => navigation.navigate('Login')}>
+                        <TouchableOpacity onPress={() => navigation.navigate('OrgLogin')}>
                             <Text style={est.cadlogNav}>Entre</Text>
-                        </TouchableOpacity><TouchableOpacity onPress={() => navigation.navigate('OrgCadastro2')}>
-                            <Text style={est.cadlogNav}>Passar</Text>
                         </TouchableOpacity>
                         <Text style={est.textCadlog}>agora!</Text>
                     </View>

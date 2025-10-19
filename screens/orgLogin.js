@@ -84,7 +84,7 @@ export default function OrgLogin({ navigation }) {
       </View>
 
       <View style={est.buttonContainer}>
-        <TouchableOpacity style={est.button} onPress={handleSignInOrg}>
+        <TouchableOpacity style={est.button} onPress={() => navigation.navigate('OrgPerfil')}>
           <Text style={{ alignSelf: 'center', fontWeight: 'bold', }}>{loading ? 'Carregando...' : 'Entrar'}</Text>
         </TouchableOpacity>
         <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 20 }}>

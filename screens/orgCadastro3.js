@@ -80,9 +80,6 @@ export default function OrgCadastro3({ navigation }) {
                 <TouchableOpacity style={est.button} onPress={() => navigation.navigate("OrgCadastro4")}>
                     <Text style={{ alignSelf: 'center', fontWeight: 'bold', }}>Etapa 3 de 4</Text>
                 </TouchableOpacity>
-                <TouchableOpacity style={est.button}>
-                    <Text style={{ alignSelf: 'center', fontWeight: 'bold', }}>Enviar</Text>
-                </TouchableOpacity>
                 <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: '30%' }}>
                     <Text style={est.textCadlog}>
                         Já possui uma conta?
