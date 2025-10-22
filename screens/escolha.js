@@ -46,7 +46,7 @@ export default function Escolha({navigation}) {
           />
         </View>
 
-        <TouchableOpacity style={style.button} onPress={()=>navigation.navigate("Tutorial1")}>
+        <TouchableOpacity style={style.button} onPress={()=>navigation.replace("Tutorial1")}>
           <Text style={{alignSelf:'center',fontWeight:'bold',}}>Prosseguir</Text>
         </TouchableOpacity>
       </View>

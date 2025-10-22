@@ -49,7 +49,7 @@ export default function Cadastro({ navigation }) {
       });
 
       setLoading(false);
-      navigation.navigate('Login');
+      navigation.replace('Escolha');
     }
     else {
       Alert.alert('Erro ao cadastrar', error.message);
@@ -151,7 +151,7 @@ export default function Cadastro({ navigation }) {
 
           <View style={est.loginRow}>
             <Text style={est.textCadlog}>Já possui uma conta?</Text>
-            <TouchableOpacity onPress={() => navigation.navigate('Login')}>
+            <TouchableOpacity onPress={() => navigation.replace('Login')}>
               <Text style={est.cadlogNav}>Entre</Text>
             </TouchableOpacity>
             <Text style={est.textCadlog}>agora!</Text>

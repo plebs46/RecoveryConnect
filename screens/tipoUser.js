@@ -6,10 +6,10 @@ export default function TipoUser({ navigation }) {
 
     const handleProceed = () => {
         if (selectedProfile === 'paciente') {
-            navigation.navigate("Login");
+            navigation.replace("Login");
             console.log('navegar');
         } else if (selectedProfile === 'organizacao') {
-            navigation.navigate("Org");
+            navigation.replace("Org");
             console.log('navegar');
         }
     };

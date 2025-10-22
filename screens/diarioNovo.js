@@ -1,14 +1,48 @@
-import {View, Text, TouchableOpacity, Image, StyleSheet, ScrollView, TextInput} from 'react-native';
+import { View, Text, TouchableOpacity, Image, StyleSheet, ScrollView, TextInput, Alert } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import { useState } from 'react';
+import { supabase } from '../lib/supabase';
 
-export default function DiarioNovo({navigation}) {
+export default function DiarioNovo({ navigation }) {
   const [respostaDia, setRespostaDia] = useState('');
   const [respostaProd, setRespostaProd] = useState('');
   const [respostaCtrl, setRespostaCtrl] = useState('');
   const [respostaTemp, setRespostaTemp] = useState('');
   const [respostaCmnt, setRespostaCmnt] = useState('');
-  const [respostas, setRespostas] = useState(null);
+
+  async function salvarDiario(respostasColetadas) {
+    const { data, error } = await supabase.auth.getSession();
+
+    if (error || !data.session) {
+      Alert.alert("Erro", "Usuário não autenticado.");
+      return;
+    }
+
+    const user = data.session.user;
+
+    const { data: insertData, error: insertError } = await supabase
+      .from('diarios')
+      .insert([
+        {
+          user_id: user.id,
+          resposta_1: respostasColetadas.mediaDia,
+          resposta_2: respostasColetadas.produtividade,
+          resposta_3: respostasColetadas.controle,
+          resposta_4: respostasColetadas.tempo,
+          resposta_livre: respostasColetadas.comentario,
+          data_criacao: new Date(),
+        },
+      ]);
+
+    if (insertError) {
+      console.error(insertError);
+      Alert.alert("Erro ao inserir", insertError.message);
+    } else {
+      Alert.alert("Sucesso", "Diário salvo com sucesso!");
+      console.log("Registro inserido:", insertData);
+      navigation.replace("Diario");
+    }
+  }
 
   const perguntas = [
     {
@@ -65,6 +99,12 @@ export default function DiarioNovo({navigation}) {
     },
   ];
 
+  const todasRespondidas =
+    respostaDia !== '' &&
+    respostaProd !== '' &&
+    respostaCtrl !== '' &&
+    respostaTemp !== '';
+
   const salvarRespostas = () => {
     const respostasColetadas = {
       mediaDia: respostaDia,
@@ -75,15 +115,15 @@ export default function DiarioNovo({navigation}) {
     };
     console.log('Respostas do usuário:', respostasColetadas);
 
-    setRespostas(respostasColetadas);
+    salvarDiario(respostasColetadas);
   };
 
   return (
     <ScrollView>
       <View style={style.container}>
-        <View style={style.header}/>
-        <View style={{marginTop: 30, width: '80%', flexDirection: 'row', alignItems: 'center', marginBottom: 20}}>
-          <TouchableOpacity style={{padding: 10, marginRight: 10}} onPress={()=>navigation.navigate("Diario")}>
+        <View style={style.header} />
+        <View style={{ marginTop: 30, width: '80%', flexDirection: 'row', alignItems: 'center', marginBottom: 20 }}>
+          <TouchableOpacity style={{ padding: 10, marginRight: 10 }} onPress={() => navigation.navigate("Diario")}>
             <Icon
               name={'arrow-left'}
               size={30}
@@ -126,25 +166,21 @@ export default function DiarioNovo({navigation}) {
         <View style={style.questionContainer}>
           <Text style={style.questionTitle}>Anote o seu dia livremente (opcional)</Text>
           <TextInput style={style.comentario}
-            multiline = {true}
-            numberOfLines = { 5 }
+            multiline={true}
+            numberOfLines={5}
             placeholder="Anote qualquer coisa aqui..."
             value={respostaCmnt}
             onChangeText={setRespostaCmnt}
           />
         </View>
 
-        <TouchableOpacity style={style.button} onPress={salvarRespostas}>
-          <Text style={{fontWeight: 'bold', alignSelf: 'center'}}>Atualizar</Text>
+        <TouchableOpacity 
+          style={[style.button, !todasRespondidas && { backgroundColor: '#caceceff' }]}
+          onPress={salvarRespostas}
+          disabled={!todasRespondidas}
+        >
+          <Text style={{ fontWeight: 'bold', alignSelf: 'center' }}>Atualizar</Text>
         </TouchableOpacity>
-
-        {respostas && (
-          <View style={style.card}>
-            <Text style={style.mediaDia}>{"O seu dia foi " + respostas.mediaDia}</Text>
-            <Text style={style.dados}>{"Produtividade " + respostas.produtividade + ", controle " + respostas.controle + ", " + respostas.tempo + " tempo"}</Text>
-            <Text style={style.coment}>{respostas.comentario}</Text>
-          </View>
-        )}
       </View>
     </ScrollView>
   );
@@ -153,9 +189,9 @@ export default function DiarioNovo({navigation}) {
 const style = StyleSheet.create({
   container: {
     flex: 1,
-    flexDirection:'column',
+    flexDirection: 'column',
     backgroundColor: 'white',
-    alignItems:'center',
+    alignItems: 'center',
   },
   header: {
     backgroundColor: '#5ce1e6',
@@ -167,7 +203,7 @@ const style = StyleSheet.create({
     shadowRadius: 3.84,
     elevation: 4,
   },
-  title:{
+  title: {
     fontSize: 24,
     fontWeight: 'bold',
     width: '80%',
@@ -234,43 +270,12 @@ const style = StyleSheet.create({
     padding: 10,
   },
 
-  button:{
-    backgroundColor:'#5ce1e6',
-    borderRadius:100,
+  button: {
+    backgroundColor: '#5ce1e6',
+    borderRadius: 100,
     padding: 10,
-    width:'60%',
+    width: '60%',
     marginBottom: 40,
     marginTop: 20,
-  },
-
-  card: {
-    backgroundColor: '#F3FFFF',
-    padding: 20,
-    borderRadius: 20,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 1 },
-    shadowOpacity: 0.25,
-    shadowRadius: 3.84,
-    elevation: 4,
-    marginVertical: 10,
-    marginHorizontal: 3,
-    width: '80%',
-  },
-  mediaDia: {
-    fontSize: 18,
-    fontWeight: 'bold',
-  },
-  dados: {
-    fontSize: 16,
-    marginTop: 5,
-    maxWidth: '80%',
-    marginLeft: 10,
-  },
-  coment: {
-    fontSize: 14,
-    marginTop: 7,
-    maxWidth: '80%',
-    marginLeft: 10,
-    marginBottom: 5,
   },
 });

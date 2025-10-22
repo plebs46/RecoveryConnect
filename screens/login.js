@@ -34,7 +34,7 @@ export default function Login({ navigation }) {
     }
 
     setLoading(false);
-    navigation.navigate('Escolha');
+    navigation.replace('Main');
   }
 
   return (
@@ -78,7 +78,7 @@ export default function Login({ navigation }) {
           <Text style={est.textCadlog}>
             Ainda não possui uma conta?
           </Text>
-          <TouchableOpacity onPress={() => navigation.navigate("Cadastro")}>
+          <TouchableOpacity onPress={() => navigation.replace("Cadastro")}>
             <Text style={est.cadlogNav}>
               Cadastre-se
             </Text>
@@ -87,7 +87,7 @@ export default function Login({ navigation }) {
             agora!
           </Text>
         </View>
-        <TouchableOpacity style={{ marginBottom: '25%', padding: 20 }} onPress={() => navigation.navigate("TipoUser")}>
+        <TouchableOpacity style={{ marginBottom: '25%', padding: 20 }} onPress={() => navigation.replace("TipoUser")}>
           <Text style={est.backButtonText}>Voltar à tela de seleção de perfil</Text>
         </TouchableOpacity>
       </View>
