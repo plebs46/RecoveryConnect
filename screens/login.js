@@ -34,7 +34,7 @@ export default function Login({ navigation }) {
     }
 
     setLoading(false);
-    navigation.replace('Main');
+    navigation.replace('Escolha');
   }
 
   return (
@@ -51,7 +51,9 @@ export default function Login({ navigation }) {
       <TextInput style={est.textBox} placeholder='E-mail' placeholderTextColor='lightGray' value={email} onChangeText={setEmail} />
 
       <View style={est.passwordContainer}>
-        <TextInput style={est.passwordInput} placeholder='Senha' placeholderTextColor='lightGray' secureTextEntry={!showPassword} value={senha} onChangeText={setSenha} />
+        <TextInput style={est.passwordInput} placeholder='Senha' placeholderTextColor='lightGray' 
+          secureTextEntry={!showPassword} 
+          value={senha} onChangeText={setSenha} />
         <TouchableOpacity
           style={est.eyeIcon}
           onPress={() => setShowPassword(!showPassword)}

@@ -52,7 +52,7 @@ export default function OrgPerfil({ navigation }) {
         tipo: 'Clínica',
         cnpj: '12.345.678/0001-90',
         informacoes: [
-            { id: '1', label: 'E-mail da instituição', valor: 'master.health@lifecare.com' },
+            { id: '1', label: 'E-mail da instituição', valor: 'org@mail' },
             { id: '2', label: 'Telefone', valor: '(11) 91234-5678' },
             { id: '3', label: 'Rede social', valor: '@masterhealthlife' },
         ],
@@ -301,7 +301,7 @@ export default function OrgPerfil({ navigation }) {
                                     <Text>Cancelar</Text>
                                 </TouchableOpacity>
 
-                                <TouchableOpacity style={est.confirmar}>
+                                <TouchableOpacity style={est.confirmar} onPress={() => navigation.navigate('TipoUser')}>
                                     <Text style={{ color: 'white' }}>Sair</Text>
                                 </TouchableOpacity>
                             </View>
