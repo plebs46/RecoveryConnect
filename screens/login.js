@@ -34,7 +34,7 @@ export default function Login({ navigation }) {
     }
 
     setLoading(false);
-    navigation.replace('Escolha');
+    navigation.replace('Main');
   }
 
   return (

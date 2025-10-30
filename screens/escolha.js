@@ -60,13 +60,13 @@ export default function Escolha({ navigation }) {
       .map(([key]) => {
         switch (key) {
           case "alcool":
-            return "álcool";
+            return "alcool";
           case "cigarro":
             return "cigarro";
           case "cigarroEletronico":
-            return "cigarro_eletronico";
+            return "cigarro eletronico";
           case "drogasIlicitas":
-            return "drogas ilícitas";
+            return "drogas ilicitas";
           default:
             return key;
         }
