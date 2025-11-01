@@ -1,7 +1,9 @@
 import { View, Text, TouchableOpacity, FlatList, StyleSheet, Dimensions } from 'react-native';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Calendar, LocaleConfig } from 'react-native-calendars';
+import { supabase } from '../lib/supabase';
 
+// Configuração do calendário
 LocaleConfig.locales['pt'] = {
   monthNames: [
     'Janeiro',
@@ -26,35 +28,15 @@ LocaleConfig.locales['pt'] = {
 LocaleConfig.defaultLocale = 'pt';
 
 export default function Desafios({ navigation }) {
-  const desafios = [
-    {
-      id: '1',
-      titulo: 'Manter-se longe de cigarros por 7 dias',
-      descricao: 'Ao longo da semana, conquiste a independência adotando o autocontrole na sua rotina.',
-      nivel: '⭐️⭐️',
-      inicio: '2025-10-10',
-      fim: '2025-10-16',
-    },
-    {
-      id: '2',
-      titulo: 'Correr 5km na semana',
-      descricao: 'Melhore sua resistência e fortaleça seu corpo correndo um total de 5km nesta semana.',
-      nivel: '⭐️⭐️⭐️',
-      inicio: '2025-10-06',
-      fim: '2025-10-12',
-    },
-    {
-      id: '3',
-      titulo: 'Ler um livro por 15 minutos ao dia',
-      descricao: 'Aumente seu conhecimento e relaxe a mente com a leitura diária.',
-      nivel: '⭐️',
-      inicio: '2025-10-05',
-      fim: '2025-10-11',
-    },
-  ];
+  const [desafioSelecionado, setDesafioSelecionado] = useState(null);
 
-  const [desafioSelecionado, setDesafioSelecionado] = useState(desafios[0]);
+  useEffect(() => {
+    if (desafios.length > 0 && !desafioSelecionado) {
+      setDesafioSelecionado(desafios[0]);
+    }
+  }, [desafios]);
 
+  // Calendário
   const getHojeBrasilia = () => {
     const hoje = new Date();
     const brasiliaDate = hoje.toLocaleDateString('pt-BR', {
@@ -102,6 +84,52 @@ export default function Desafios({ navigation }) {
     return dates;
   };
 
+  // Exibir metas selecionadas
+  const [desafios, setDesafios] = useState([]);
+
+  useEffect(() => {
+    async function carregarMetasUsuario() {
+      try {
+        const { data: { user } } = await supabase.auth.getUser();
+        if (!user) return;
+
+        const { data, error } = await supabase
+          .from('metas_usuario')
+          .select(`
+            id_meta_usuario,
+            data_inicio,
+            data_fim,
+            metas (
+              id_meta,
+              descricao,
+              descricao_longa,
+              nivel,
+              duracao_dias
+            )
+          `)
+          .eq('id_usuario', user.id);
+
+        if (error) throw error;
+
+        const metasFormatadas = data.map(item => ({
+          id: item.metas.id_meta,
+          descricao: item.metas.descricao,
+          descricao_longa: item.metas.descricao_longa,
+          nivel: item.metas.nivel,
+          data_inicio: item.data_inicio,
+          data_fim: item.data_fim,
+          duracao: item.metas.duracao_dias,
+        }));
+
+        setDesafios(metasFormatadas);
+      } catch (e) {
+        console.error('Erro ao carregar metas do usuário:', e);
+      }
+    }
+
+    carregarMetasUsuario();
+  }, []);
+
   return (
     <View style={style.container}>
       <View style={style.headerContainer}>
@@ -124,40 +152,73 @@ export default function Desafios({ navigation }) {
       <Text style={style.title}>Suas metas em progresso</Text>
 
       <View style={{ flex: 1, width: '100%' }}>
-        <FlatList
-          data={desafios}
-          horizontal
-          pagingEnabled
-          showsHorizontalScrollIndicator={false}
-          keyExtractor={(item) => item.id}
-          renderItem={({ item }) => (
+        {desafios.length === 0 ? (
+          <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', width: '80%', alignSelf: 'center' }}>
+            <Text style={style.subtitle}>
+              Não há metas em progresso no momento.
+            </Text>
+            <Text style={{ textAlign: 'center', marginBottom: 20 }}>
+              Vá para a tela de metas e escolha uma nova meta.
+            </Text>
             <TouchableOpacity
-              style={[
-                style.desafioCard,
-                desafioSelecionado.id === item.id && style.desafioCardSelecionado,
-              ]}
-              onPress={() => setDesafioSelecionado(item)}
+              style={style.button}
+              onPress={() => navigation.navigate('DesafiosNovo')}
             >
-              <Text style={style.desafioTitulo}>{item.titulo}</Text>
-              <Text style={style.desafioDescricao}>{item.descricao}</Text>
-              <Text style={style.desafioNivel}>Nível {item.nivel}</Text>
+              <Text style={{ color: 'white', fontWeight: 'bold' }}>Selecionar Meta</Text>
             </TouchableOpacity>
-          )}
-        />
+          </View>
+        ) : (
+          <FlatList
+            data={desafios}
+            horizontal
+            pagingEnabled
+            showsHorizontalScrollIndicator={false}
+            keyExtractor={(item) => item.id.toString()}
+            renderItem={({ item }) => (
+              <TouchableOpacity
+                style={[
+                  style.desafioCard,
+                  desafioSelecionado?.id === item.id && style.desafioCardSelecionado,
+                ]}
+                onPress={() => setDesafioSelecionado(item)}
+              >
+                <Text style={style.desafioTitulo}>{item.descricao}</Text>
+                <Text style={style.desafioDescricao}>{item.descricao_longa}</Text>
+                <Text style={style.desafioNivel}>Nível {item.nivel}</Text>
+                <Text style={style.desafioNivel}>Duração: {item.duracao} dias</Text>
+              </TouchableOpacity>
+            )}
+          />
+        )}
 
-        <Calendar
-          style={{ height: '60%', marginBottom: 20 }}
-          onDayPress={(day) => {
-            console.log('Data selecionada', day.dateString);
-          }}
-          markingType={'period'}
-          markedDates={getMarkedDates(desafioSelecionado.inicio, desafioSelecionado.fim)}
-          theme={{
-            selectedDayBackgroundColor: '#00adf5',
-            todayTextColor: 'red',
-            arrowColor: 'blue',
-          }}
-        />
+        {desafioSelecionado?.data_inicio && desafioSelecionado?.data_fim ? (
+          <Calendar
+            style={{ height: '60%', marginBottom: 20 }}
+            onDayPress={(day) => {
+              console.log('Data selecionada', day.dateString);
+            }}
+            markingType={'period'}
+            markedDates={getMarkedDates(desafioSelecionado.data_inicio, desafioSelecionado.data_fim)}
+            theme={{
+              selectedDayBackgroundColor: '#00adf5',
+              todayTextColor: 'red',
+              arrowColor: 'blue',
+            }}
+          />
+        ) : (
+          <Calendar
+            style={{ height: '60%', marginBottom: 20 }}
+            onDayPress={(day) => {
+              console.log('Data selecionada', day.dateString);
+            }}
+            markingType={'period'}
+            theme={{
+              selectedDayBackgroundColor: '#00adf5',
+              todayTextColor: 'red',
+              arrowColor: 'blue',
+            }}
+          />
+        )}
       </View>
     </View>
   );
@@ -176,6 +237,13 @@ const style = StyleSheet.create({
     backgroundColor: '#5ce1e6',
     paddingTop: 50,
     width: '100%',
+  },
+  button: {
+    backgroundColor: '#5ce1e6',
+    paddingVertical: 15,
+    paddingHorizontal: 30,
+    borderRadius: 15,
+    marginTop: 10,
   },
   buttonInactive: {
     flex: 1,
@@ -201,6 +269,12 @@ const style = StyleSheet.create({
     marginTop: 30,
     marginBottom: 20,
   },
+  subtitle: {
+    fontSize: 22,
+    marginTop: 30,
+    marginBottom: 20,
+    textAlign: 'center',
+  },
 
   desafioCard: {
     width: Dimensions.get('window').width * 0.8,
@@ -221,12 +295,13 @@ const style = StyleSheet.create({
   desafioTitulo: {
     fontSize: 16,
     fontWeight: 'bold',
-    marginBottom: 5,
+    marginBottom: 10,
   },
   desafioDescricao: {
     fontSize: 14,
     marginBottom: 5,
     color: '#555',
+    lineHeight: 18,
   },
   desafioNivel: {
     fontSize: 12,

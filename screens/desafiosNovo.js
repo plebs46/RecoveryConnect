@@ -3,6 +3,7 @@ import { useEffect, useState } from 'react';
 import { supabase } from '../lib/supabase';
 
 export default function DesafiosNovo({ navigation }) {
+  // Exibir desafios disponíveis para o usuário selecionar
   const [desafios, setDesafios] = useState([]);
   const [carregando, setCarregando] = useState(true);
 
@@ -73,6 +74,42 @@ export default function DesafiosNovo({ navigation }) {
 
   const [modalVisivel, setModalVisivel] = useState(false);
   const [desafioSelecionado, setDesafioSelecionado] = useState(null);
+
+  // Metas do usuário
+  async function registrarMetaUsuario(desafioSelecionado) {
+    try {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) {
+        alert('Usuário não autenticado');
+        return;
+      }
+
+      const dataInicio = new Date();
+      const dataFim = new Date();
+      dataFim.setDate(dataInicio.getDate() + (desafioSelecionado.duracao_dias - 1));
+
+      const { error } = await supabase
+        .from('metas_usuario')
+        .insert([
+          {
+            id_usuario: user.id,
+            id_meta: desafioSelecionado.id_meta,
+            data_inicio: dataInicio.toISOString().split('T')[0],
+            data_fim: dataFim.toISOString().split('T')[0],
+          },
+        ]);
+
+      if (error) {
+        console.error(error);
+        alert('Erro ao registrar meta.');
+      } else {
+        alert('Meta adicionada com sucesso!');
+      }
+    } catch (e) {
+      console.error(e);
+      alert('Erro inesperado ao salvar a meta.');
+    }
+  }
 
   return (
     <View style={style.container}>
@@ -168,7 +205,7 @@ export default function DesafiosNovo({ navigation }) {
 
               <TouchableOpacity
                 onPress={() => {
-                  // Aqui depois a gente vai inserir a lógica para salvar a meta selecionada
+                  registrarMetaUsuario(desafioSelecionado);
                   setModalVisivel(false);
                   console.log('Meta selecionada:', desafioSelecionado.descricao);
                 }}
