@@ -13,6 +13,7 @@ import ConsultasFuturas from './consultasFuturas';
 import Midia from './midia';
 import Desafios from './desafios';
 import DesafiosNovo from './desafiosNovo';
+import DesafiosDetalhes from './desafiosDetalhes';
 import Usuario from './usuario';
 import UsuarioDados from './usuarioDados';
 import InfMedico from './infMedico';
@@ -52,6 +53,7 @@ export {
 
   Desafios,
   DesafiosNovo,
+  DesafiosDetalhes,
 
   Usuario,
   UsuarioDados,

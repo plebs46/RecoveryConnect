@@ -8,10 +8,7 @@ import { supabase } from '../lib/supabase';
 
 export default function Cadastro({ navigation }) {
   const [showPassword, setShowPassword] = useState(false);
-
   const [nome, setNome] = useState('');
-  const [dataNascimento, setDataNascimento] = useState('');
-  const [cpf, setCpf] = useState('');
   const [cidade, setCidade] = useState('');
   const [email, setEmail] = useState('');
   const [telefone, setTelefone] = useState('');
@@ -28,8 +25,6 @@ export default function Cadastro({ navigation }) {
         data: {
           tipo_conta: 'paciente',
           nome_usuario: nome,
-          data_nascimento: dataNascimento,
-          cpf: cpf,
           cidade: cidade,
           telefone: telefone,
           senha: senha,
@@ -41,15 +36,13 @@ export default function Cadastro({ navigation }) {
       await supabase.from('clientes').insert({
         user_id: data.user.id,
         nome_usuario: nome,
-        data_nascimento: dataNascimento,
-        cpf: cpf,
         cidade: cidade,
         telefone: telefone,
         senha: senha,
       });
 
       setLoading(false);
-      navigation.navigate('Login');
+      navigation.replace('Escolha');
     }
     else {
       Alert.alert('Erro ao cadastrar', error.message);
@@ -76,31 +69,8 @@ export default function Cadastro({ navigation }) {
           <Text style={est.title}>Crie a sua conta!</Text>
 
           <TextInput style={est.textBox} placeholder='Nome de Usuário' placeholderTextColor='lightGray' value={nome} onChangeText={setNome} />
-          <MaskedTextInput
-            mask="99/99/9999"
-            onChangeText={(masked, unmasked) => {
-              setDataNascimento(masked);
-            }}
-            value={dataNascimento}
-            style={est.textBox}
-            placeholder="DD/MM/AAAA"
-            placeholderTextColor="lightGray"
-            keyboardType="numeric"
-          />
-
-          <MaskedTextInput
-            mask="999.999.999-99"
-            onChangeText={(masked, unmasked) => {
-              setCpf(masked);
-            }}
-            value={cpf}
-            style={est.textBox}
-            placeholder="CPF"
-            placeholderTextColor="lightGray"
-            keyboardType="numeric"
-          />
-          <TextInput style={est.textBox} placeholder='Cidade' placeholderTextColor='lightGray' value={cidade} onChangeText={setCidade} />
           <TextInput style={est.textBox} placeholder='E-mail' placeholderTextColor='lightGray' value={email} onChangeText={setEmail} />
+          <TextInput style={est.textBox} placeholder='Cidade' placeholderTextColor='lightGray' value={cidade} onChangeText={setCidade} />
           <MaskedTextInput
             mask="(99) 99999-9999"
             onChangeText={(masked, unmasked) => {
@@ -151,7 +121,7 @@ export default function Cadastro({ navigation }) {
 
           <View style={est.loginRow}>
             <Text style={est.textCadlog}>Já possui uma conta?</Text>
-            <TouchableOpacity onPress={() => navigation.navigate('Login')}>
+            <TouchableOpacity onPress={() => navigation.replace('Login')}>
               <Text style={est.cadlogNav}>Entre</Text>
             </TouchableOpacity>
             <Text style={est.textCadlog}>agora!</Text>

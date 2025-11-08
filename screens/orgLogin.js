@@ -84,14 +84,14 @@ export default function OrgLogin({ navigation }) {
       </View>
 
       <View style={est.buttonContainer}>
-        <TouchableOpacity style={est.button} onPress={() => navigation.navigate('OrgPerfil')}>
+        <TouchableOpacity style={est.button} onPress={() => navigation.replace('OrgPerfil')}>
           <Text style={{ alignSelf: 'center', fontWeight: 'bold', }}>{loading ? 'Carregando...' : 'Entrar'}</Text>
         </TouchableOpacity>
         <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 20 }}>
           <Text style={est.textCadlog}>
             Ainda não possui uma conta?
           </Text>
-          <TouchableOpacity onPress={() => navigation.navigate("OrgCadastro1")}>
+          <TouchableOpacity onPress={() => navigation.replace("OrgCadastro1")}>
             <Text style={est.cadlogNav}>
               Cadastre-se
             </Text>
@@ -100,7 +100,7 @@ export default function OrgLogin({ navigation }) {
             agora!
           </Text>
         </View>
-        <TouchableOpacity style={{ marginBottom: '25%', padding: 20 }} onPress={() => navigation.navigate("TipoUser")}>
+        <TouchableOpacity style={{ marginBottom: '25%', padding: 20 }} onPress={() => navigation.replace("TipoUser")}>
           <Text style={est.backButtonText}>Voltar à tela de seleção de perfil</Text>
         </TouchableOpacity>
       </View>

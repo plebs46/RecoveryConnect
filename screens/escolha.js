@@ -1,8 +1,9 @@
-import {  View, Text, TouchableOpacity, StyleSheet } from 'react-native';
+import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 import CheckBox from '../components/CheckBox';
 import { useState } from "react";
+import { supabase } from "../lib/supabase";
 
-export default function Escolha({navigation}) {
+export default function Escolha({ navigation }) {
   const [checkOptions, setCheckOptions] = useState({
     alcool: false,
     cigarro: false,
@@ -46,24 +47,72 @@ export default function Escolha({navigation}) {
           />
         </View>
 
-        <TouchableOpacity style={style.button} onPress={()=>navigation.navigate("Tutorial1")}>
-          <Text style={{alignSelf:'center',fontWeight:'bold',}}>Prosseguir</Text>
+        <TouchableOpacity style={style.button} onPress={salvarSubstancias}>
+          <Text style={{ alignSelf: 'center', fontWeight: 'bold', }}>Prosseguir</Text>
         </TouchableOpacity>
       </View>
     </View>
   );
+
+  function getSelectedSubstances() {
+    const selecionadas = Object.entries(checkOptions)
+      .filter(([key, value]) => value)
+      .map(([key]) => {
+        switch (key) {
+          case "alcool":
+            return "alcool";
+          case "cigarro":
+            return "cigarro";
+          case "cigarroEletronico":
+            return "cigarro eletronico";
+          case "drogasIlicitas":
+            return "drogas ilicitas";
+          default:
+            return key;
+        }
+      });
+
+    return selecionadas;
+  }
+
+  async function salvarSubstancias() {
+    const substanciasSelecionadas = getSelectedSubstances();
+    console.log("Substâncias selecionadas:", substanciasSelecionadas);
+
+    const { data: { user }, error: userError } = await supabase.auth.getUser();
+
+    if (userError || !user) {
+      console.error("Erro ao obter usuário:", userError);
+      alert("Não foi possível identificar o usuário.");
+      return;
+    }
+
+    console.log("Usuário atual:", user.id);
+
+    const { error } = await supabase
+      .from("conta_usuario")
+      .update({ substancia: substanciasSelecionadas })
+      .eq("id_usuario", user.id);
+  
+    if (error) {
+      console.error(error);
+      alert("Erro ao salvar substâncias.");
+    } else {
+      alert("Substâncias salvas com sucesso!");
+    }
+  }
 }
 
 const style = StyleSheet.create({
   container: {
     flex: 1,
-    flexDirection:'column',
+    flexDirection: 'column',
     backgroundColor: '#DEFFFF',
-    alignItems:'center',
+    alignItems: 'center',
     width: '100%',
     height: '100%',
   },
-  
+
   title: {
     fontWeight: 'bold',
     fontSize: 30,
@@ -77,7 +126,7 @@ const style = StyleSheet.create({
     padding: 30,
     borderRadius: 20,
     width: '70%',
-    alignItems:'center',
+    alignItems: 'center',
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.25,
@@ -89,14 +138,14 @@ const style = StyleSheet.create({
     fontSize: 18,
     marginBottom: 20,
   },
-  button:{
-    backgroundColor:'#5ce1e6',
-    borderRadius:100,
+  button: {
+    backgroundColor: '#5ce1e6',
+    borderRadius: 100,
     padding: 10,
-    width:'70%',
+    width: '70%',
     marginTop: 30,
   },
-  
+
   checkContainer: {
     width: '75%'
   },
