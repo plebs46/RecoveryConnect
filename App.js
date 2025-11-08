@@ -3,7 +3,7 @@ import { createStackNavigator } from '@react-navigation/stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import {
   OrgLogin, TipoUser, Login, Cadastro, Escolha, Tutorial1, Tutorial2, Tutorial3, Tutorial4,
-  Diario, DiarioNovo, ConsultasFuturas, InfMedico, Midia, Desafios, DesafiosNovo,
+  Diario, DiarioNovo, ConsultasFuturas, InfMedico, Midia, Desafios, DesafiosNovo, DesafiosDetalhes,
   Usuario, UsuarioDados, Notificacao, OrgCadastro1, OrgCadastro2, OrgCadastro3, OrgCadastro4, OrgCadastro5, OrgEspera,
   OrgPerfil, OrgPerfilEdit, OrgPerfilDias, OrgPerfilSenhaEdit,
 } from './screens/files';
@@ -204,6 +204,11 @@ function DesafiosStackNavigator() {
       <Stack.Screen
         name="DesafiosNovo"
         component={DesafiosNovo}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name="DesafiosDetalhes"
+        component={DesafiosDetalhes}
         options={{ headerShown: false }}
       />
     </Stack.Navigator>

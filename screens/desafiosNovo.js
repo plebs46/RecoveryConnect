@@ -24,9 +24,7 @@ export default function DesafiosNovo({ navigation }) {
           .single();
 
         const substancias = conta?.substancia || [];
-        console.log('Substâncias do usuário:', substancias);
 
-        // Se não tiver substâncias mostra todas as metas
         let { data: metas, error } = await supabase
           .from('metas')
           .select('*');
@@ -41,7 +39,16 @@ export default function DesafiosNovo({ navigation }) {
               substancias.includes(m.substancia_relacionada.toLowerCase())
           );
         }
-        setDesafios(metas);
+
+        const { data: metasUsuario } = await supabase
+          .from('metas_usuario')
+          .select('id_meta')
+          .eq('id_usuario', usuario.id);
+
+        const metasDisponiveis = metas.filter(
+          (m) => !metasUsuario?.some(mu => mu.id_meta === m.id_meta)
+        );
+        setDesafios(metasDisponiveis);
       } catch (err) {
         console.error('Erro ao carregar desafios:', err);
       } finally {
@@ -103,6 +110,7 @@ export default function DesafiosNovo({ navigation }) {
         console.error(error);
         alert('Erro ao registrar meta.');
       } else {
+        setDesafios(prev => prev.filter(d => d.id_meta !== desafioSelecionado.id_meta));
         alert('Meta adicionada com sucesso!');
       }
     } catch (e) {
