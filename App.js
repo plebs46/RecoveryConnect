@@ -95,7 +95,7 @@ function MainTabNavigator() {
       }}
     >
       <Tab.Screen
-        name="Diario"
+        name="DiarioNavigator"
         component={DiarioNavigator}
         options={{
           tabBarIcon: ({ color }) => (
@@ -108,7 +108,7 @@ function MainTabNavigator() {
         }}
       />
       <Tab.Screen
-        name="ConsultasFuturas"
+        name="ConsultasStackNavigator"
         component={ConsultasStackNavigator}
         options={{
           tabBarIcon: ({ color }) => (
@@ -134,7 +134,7 @@ function MainTabNavigator() {
         }}
       />
       <Tab.Screen
-        name="Desafios"
+        name="DesafiosStackNavigator"
         component={DesafiosStackNavigator}
         options={{
           tabBarIcon: ({ color }) => (
@@ -147,7 +147,7 @@ function MainTabNavigator() {
         }}
       />
       <Tab.Screen
-        name="Usuario"
+        name="UsuarioStackNavigator"
         component={UsuarioStackNavigator}
         options={{
           tabBarIcon: ({ color }) => (

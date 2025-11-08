@@ -98,7 +98,7 @@ export default function Escolha({ navigation }) {
       console.error(error);
       alert("Erro ao salvar substâncias.");
     } else {
-      alert("Substâncias salvas com sucesso!");
+      navigation.navigate('Tutorial1');
     }
   }
 }

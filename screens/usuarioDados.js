@@ -73,11 +73,10 @@ export default function UsuarioDados({ navigation }) {
 
       <View style={{ width: '60%', marginTop: 20, marginBottom: 30 }}>
         <Text style={est.senhaReq}>*Atenção! A senha deve conter:</Text>
-        <Text style={est.senhaReq}> - Ao mínimo 8 caracteres;</Text>
+        <Text style={est.senhaReq}> - Ao mínimo 6 caracteres;</Text>
         <Text style={est.senhaReq}> - Uma letra maiúscula;</Text>
         <Text style={est.senhaReq}> - Uma letra minúscula;</Text>
         <Text style={est.senhaReq}> - Um número;</Text>
-        <Text style={est.senhaReq}> - Um caractere especial (@, #, $ etc).</Text>
       </View>
 
       <View style={est.buttonContainer}>

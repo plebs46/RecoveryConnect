@@ -11,7 +11,6 @@ export default function Cadastro({ navigation }) {
   const [nome, setNome] = useState('');
   const [cidade, setCidade] = useState('');
   const [email, setEmail] = useState('');
-  const [telefone, setTelefone] = useState('');
   const [senha, setSenha] = useState('');
   const [loading, setLoading] = useState(false);
 
@@ -26,7 +25,6 @@ export default function Cadastro({ navigation }) {
           tipo_conta: 'paciente',
           nome_usuario: nome,
           cidade: cidade,
-          telefone: telefone,
           senha: senha,
         }
       }
@@ -37,7 +35,6 @@ export default function Cadastro({ navigation }) {
         user_id: data.user.id,
         nome_usuario: nome,
         cidade: cidade,
-        telefone: telefone,
         senha: senha,
       });
 
@@ -71,18 +68,7 @@ export default function Cadastro({ navigation }) {
           <TextInput style={est.textBox} placeholder='Nome de Usuário' placeholderTextColor='lightGray' value={nome} onChangeText={setNome} />
           <TextInput style={est.textBox} placeholder='E-mail' placeholderTextColor='lightGray' value={email} onChangeText={setEmail} />
           <TextInput style={est.textBox} placeholder='Cidade' placeholderTextColor='lightGray' value={cidade} onChangeText={setCidade} />
-          <MaskedTextInput
-            mask="(99) 99999-9999"
-            onChangeText={(masked, unmasked) => {
-              setTelefone(masked);
-            }}
-            value={telefone}
-            style={est.textBox}
-            placeholder="Telefone"
-            placeholderTextColor="lightGray"
-            keyboardType="numeric"
-          />
-
+          
           <View style={est.passwordContainer}>
             <TextInput
               style={est.passwordInput}

@@ -1,44 +1,112 @@
 import { View, Text, TouchableOpacity, Image, StyleSheet, TextInput, Modal, ScrollView } from 'react-native';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Ionicons, MaterialIcons } from '@expo/vector-icons';
 import * as ImagePicker from 'expo-image-picker';
+import { supabase } from '../lib/supabase';
 
 export default function Usuario({ navigation }) {
-  const [userData, setUserData] = useState(
-    {
-      nome: 'Usuário',
-      foto: require('../imagens/usericon.png'),
-      dataNascimento: '01/01/1999',
-      email: 'user@mail',
-      tel: '(11) 99999-9999',
-      cidade: 'Taboão da Serra',
-    },
-  );
+  const [logoutModalVisivel, setLogoutModalVisivel] = useState(false);
+  const [deleteModalVisivel, setDeleteModalVisivel] = useState(false);
+  const [loading, setLoading] = useState(true);
+  useEffect(() => {
+    async function carregarUsuario() {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) {
+        setLoading(false);
+        return;
+      }
 
-  const { nome, dataNascimento, email, tel, cidade, foto } = userData;
+      const { data, error } = await supabase
+        .from('conta_usuario')
+        .select('nome_usuario, email, cidade, imagem_url')
+        .eq('id_usuario', user.id)
+        .single();
+
+      if (!error && data) {
+        setUserData({
+          nome_usuario: data.nome_usuario,
+          email: data.email,
+          cidade: data.cidade,
+          foto: data.imagem_url ? { uri: data.imagem_url } : require('../imagens/usericon.png'),
+        });
+      }
+      setLoading(false);
+    }
+    carregarUsuario();
+  }, []);
+
+  const [userData, setUserData] = useState({
+    nome_usuario: '',
+    email: '',
+    cidade: '',
+    foto: require('../imagens/usericon.png')
+  });
+  const { nome_usuario, email, cidade, foto } = userData;
 
   const [isEditingImage, setIsEditingImage] = useState(false);
   const [tempImage, setTempImage] = useState(null);
   const pickImage = async () => {
-    let result = await ImagePicker.launchImageLibraryAsync({
+    const result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ['images'],
       allowsEditing: true,
       aspect: [4, 4],
       quality: 1
-    })
+    });
 
     if (!result.canceled) {
       setTempImage({ uri: result.assets[0].uri });
     }
-  }
+  };
 
-  const handleSaveImage = () => {
-    if (tempImage) {
-      setUserData((prev) => ({
-        ...prev,
-        foto: tempImage,
-      }));
+  const uploadImage = async (uri) => {
+    try {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) throw new Error("Usuário não autenticado");
+
+      const response = await fetch(uri);
+      const arrayBuffer = await response.arrayBuffer();
+      const file = new Uint8Array(arrayBuffer);
+
+      const fileName = `foto_perfil_${Date.now()}.jpg`;
+      const filePath = `${user.id}/${fileName}`;
+
+      const { error: uploadError } = await supabase.storage
+        .from("user_images")
+        .upload(filePath, file, { contentType: "image/jpeg" });
+
+      if (uploadError) throw uploadError;
+
+      const { data: publicUrlData } = supabase.storage
+        .from("user_images")
+        .getPublicUrl(filePath);
+
+      return publicUrlData.publicUrl;
+    } catch (err) {
+      console.error("Erro ao enviar imagem:", err);
+      return null;
     }
+  };
+
+  const handleSaveImage = async () => {
+    if (!tempImage) return;
+
+    const { data: { user } } = await supabase.auth.getUser();
+    if (!user) return;
+
+    const imageUrl = await uploadImage(tempImage.uri);
+    if (!imageUrl) return;
+
+    const { error } = await supabase
+      .from("conta_usuario")
+      .update({ imagem_url: imageUrl })
+      .eq("id_usuario", user.id);
+
+    if (error) {
+      console.log("Erro ao salvar URL no banco:", error);
+      return;
+    }
+
+    setUserData((prev) => ({ ...prev, foto: { uri: imageUrl } }));
     setTempImage(null);
     setIsEditingImage(false);
   };
@@ -47,6 +115,12 @@ export default function Usuario({ navigation }) {
     setTempImage(null);
     setIsEditingImage(false);
   };
+
+  function extractStoragePath(imageUrl) {
+    const parts = imageUrl.split('/storage/v1/object/public/');
+    if (parts.length < 2) return null;
+    return parts[1].replace(/^[^/]+\//, '');
+  }
 
   const [showModal, setShowModal] = useState(false);
   const [fieldEditing, setFieldEditing] = useState(null);
@@ -64,16 +138,90 @@ export default function Usuario({ navigation }) {
     setFieldEditing(null);
   }
 
-  function handleSave() {
-    if (fieldEditing) {
-      setUserData({
-        ...userData,
-        [fieldEditing]: tempValue,
-      });
+  async function handleSave() {
+    try {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user || !fieldEditing) return;
+
+      const novoValor = tempValue;
+
+      const { error } = await supabase
+        .from('conta_usuario')
+        .update({ [fieldEditing]: novoValor })
+        .eq('id_usuario', user.id);
+
+      if (error) console.log(error);
+
+      setUserData(prev => ({ ...prev, [fieldEditing]: novoValor }));
+    } finally {
+      setShowModal(false);
+      setTempValue("");
+      setFieldEditing(null);
     }
-    setShowModal(false);
-    setTempValue("");
-    setFieldEditing(null);
+  }
+
+  if (loading) {
+    return (
+      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: 'white' }}>
+        <Text style={{ fontSize: 18, color: '#555' }}>Carregando dados do usuário...</Text>
+      </View>
+    );
+  }
+
+  async function handleLogout() {
+    const { error } = await supabase.auth.signOut();
+    if (!error) {
+      // se quiser, manda pra tela de login
+      navigation.replace("TipoUser");
+    } else {
+      console.log("Erro ao deslogar:", error);
+    }
+  }
+
+  async function deletarConta() {
+    try {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) return;
+
+      const { data, error: buscaError } = await supabase
+        .from('conta_usuario')
+        .select('imagem_url')
+        .eq('id_usuario', user.id)
+        .single();
+
+      if (buscaError) console.log("Erro ao buscar imagem:", buscaError);
+
+      // Se existir imagem, apagar do storage
+      if (data?.imagem_url) {
+        const filePath = extractStoragePath(data.imagem_url);
+        // Ex: "user_images/1762629027779.jpg"
+
+        const { error: storageError } = await supabase
+          .storage
+          .from('user_images')
+          .remove([filePath]);
+
+        if (storageError) console.log("Erro ao apagar imagem:", storageError);
+        else console.log("📌 Imagem removida com sucesso", filePath);
+      }
+
+
+      const { error } = await supabase.rpc('apagar_conta', { usuario_uuid: user.id });
+
+      if (error) {
+        console.log(error);
+        alert("Erro ao excluir a conta.");
+        return;
+      }
+
+      await supabase.auth.signOut();
+      alert("Conta excluída permanentemente.");
+      navigation.replace('TipoUser'); // ou tela inicial
+
+    } catch (err) {
+      console.error(err);
+      alert("Erro inesperado");
+    }
   }
 
   return (
@@ -81,7 +229,7 @@ export default function Usuario({ navigation }) {
       <View style={style.container}>
         <View style={style.header} />
         <View style={style.logoContainer}>
-          <Text style={style.title}>Olá, {nome}</Text>
+          <Text style={style.title}>Olá, {nome_usuario}</Text>
           <View style={{ justifyContent: 'center', alignItems: 'center', marginBottom: 10 }}>
             <Image source={foto} style={style.logo} />
             <TouchableOpacity onPress={() => setIsEditingImage(true)} style={style.imgbutton}>
@@ -90,6 +238,7 @@ export default function Usuario({ navigation }) {
           </View>
         </View>
 
+        {/* Modal: editar imagem */}
         <Modal
           visible={isEditingImage}
           transparent
@@ -130,9 +279,15 @@ export default function Usuario({ navigation }) {
         </Modal>
 
         <View style={{ width: '80%', marginBottom: 10 }}>
-          <Text style={style.label}>Data de nascimento</Text>
+          <Text style={style.label}>Nome de usuário</Text>
           <View style={style.textBox}>
-            <Text>{dataNascimento}</Text>
+            <Text>{nome_usuario}</Text>
+            <TouchableOpacity
+              onPress={() => handleEdit("nome_usuario")}
+              style={{ marginLeft: 8, alignItems: 'flex-end' }}
+            >
+              <MaterialIcons name="edit" size={20} />
+            </TouchableOpacity>
           </View>
         </View>
         <View style={{ width: '80%', marginBottom: 10 }}>
@@ -141,18 +296,6 @@ export default function Usuario({ navigation }) {
             <Text>{email}</Text>
             <TouchableOpacity
               onPress={() => handleEdit("email")}
-              style={{ marginLeft: 8, alignItems: 'flex-end' }}
-            >
-              <MaterialIcons name="edit" size={20} />
-            </TouchableOpacity>
-          </View>
-        </View>
-        <View style={{ width: '80%', marginBottom: 10 }}>
-          <Text style={style.label}>Telefone</Text>
-          <View style={style.textBox}>
-            <Text>{tel}</Text>
-            <TouchableOpacity
-              onPress={() => handleEdit("tel")}
               style={{ marginLeft: 8, alignItems: 'flex-end' }}
             >
               <MaterialIcons name="edit" size={20} />
@@ -172,6 +315,7 @@ export default function Usuario({ navigation }) {
           </View>
         </View>
 
+        {/* Modal: editar dados */}
         <Modal visible={showModal} transparent animationType="fade">
           <View style={style.modalOverlay}>
             <View style={style.modalBox}>
@@ -208,14 +352,70 @@ export default function Usuario({ navigation }) {
             <Ionicons name="chevron-forward" size={20} color="#555" />
           </TouchableOpacity>
         </View>
-        <View style={{ width: '80%', marginBottom: 60 }}>
-          <Text style={[style.label, {color: '#dd0505'}]}>Sair</Text>
-          <TouchableOpacity style={[style.textBox, style.buttonContainer, {borderColor: '#dd0505'}]} onPress={() => navigation.navigate('TipoUser')}>
-            <Text style={{color: '#dd0505'}}>Sair da conta</Text>
+        <View style={{ width: '80%', marginBottom: 10 }}>
+          <Text style={[style.label, { color: '#dd0505' }]}>Sair</Text>
+          <TouchableOpacity style={[style.textBox, style.buttonContainer, { borderColor: '#dd0505' }]} onPress={() => setLogoutModalVisivel(true)}>
+            <Text style={{ color: '#dd0505' }}>Sair da conta</Text>
             <Ionicons name="log-out-outline" size={20} color="#dd0505ff" />
           </TouchableOpacity>
         </View>
+        <View style={{ width: '80%', marginBottom: 60 }}>
+          <Text style={[style.label, { color: '#dd0505' }]}>Excluir conta</Text>
+          <TouchableOpacity style={[style.textBox, style.buttonContainer, { borderColor: '#dd0505' }]} onPress={() => setDeleteModalVisivel(true)}>
+            <Text style={{ color: '#dd0505' }}>Deletar</Text>
+            <Ionicons name="trash-outline" size={20} color="#dd0505ff" />
+          </TouchableOpacity>
+        </View>
 
+        {/* Modal: logout */}
+        <Modal
+          transparent
+          animationType="fade"
+          visible={logoutModalVisivel}
+          onRequestClose={() => setLogoutModalVisivel(false)}
+        >
+          <View style={style.modalOverlay}>
+            <View style={style.modalBox}>
+              <Text style={{ fontWeight: "bold", marginBottom: 10, fontSize: 16 }}>Sair da conta?</Text>
+              <Text style={{ marginBottom: 20 }}>Isso vai apagar sua conta para sempre. Não poderá desfazer.</Text>
+              <View style={{ flexDirection: 'row', justifyContent: 'flex-end' }}>
+                {/* Cancelar */}
+                <TouchableOpacity onPress={() => setLogoutModalVisivel(false)} style={style.cancelBtn}>
+                  <Text style={{ fontWeight: 'bold' }}>Cancelar</Text>
+                </TouchableOpacity>
+
+                {/* Confirmar */}
+                <TouchableOpacity onPress={handleLogout} style={style.accountDataButton}>
+                  <Text style={{ color: '#fff', fontWeight: 'bold' }}>Sair</Text>
+                </TouchableOpacity>
+              </View>
+            </View>
+          </View>
+        </Modal>
+
+        {/* Modal: deletar conta */}
+        <Modal transparent visible={deleteModalVisivel} animationType="fade">
+          <View style={style.modalOverlay}>
+            <View style={style.modalBox}>
+              <Text style={{ fontWeight: "bold", marginBottom: 10, fontSize: 16 }}>
+                Tem certeza?
+              </Text>
+              <Text style={{ marginBottom: 20 }}>
+                Isso vai apagar sua conta para sempre. Não poderá desfazer.
+              </Text>
+              <View style={{ flexDirection: "row", justifyContent: "flex-end" }}>
+                <TouchableOpacity onPress={() => setDeleteModalVisivel(false)} style={style.cancelBtn}>
+                  <Text>Cancelar</Text>
+                </TouchableOpacity>
+                <TouchableOpacity
+                  onPress={deletarConta}
+                  style={style.accountDataButton}>
+                  <Text style={{ color: "#fff" }}>Excluir</Text>
+                </TouchableOpacity>
+              </View>
+            </View>
+          </View>
+        </Modal>
       </View>
     </ScrollView>
   );
@@ -314,6 +514,11 @@ const style = StyleSheet.create({
   },
   saveBtn: {
     backgroundColor: "#5ce1e6",
+    padding: 10,
+    borderRadius: 15,
+  },
+  accountDataButton: {
+    backgroundColor: "#df5151ff",
     padding: 10,
     borderRadius: 15,
   },
