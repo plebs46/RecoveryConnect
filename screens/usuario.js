@@ -205,7 +205,6 @@ export default function Usuario({ navigation }) {
         else console.log("📌 Imagem removida com sucesso", filePath);
       }
 
-
       const { error } = await supabase.rpc('apagar_conta', { usuario_uuid: user.id });
 
       if (error) {
