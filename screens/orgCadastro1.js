@@ -27,6 +27,8 @@ export default function OrgCadastro1({ navigation }) {
     senha, setSenha
   } = useSignup();
 
+  const [mask, setMask] = useState("(99) 99999-9999");
+
   return (
     <SafeAreaProvider>
       <SafeAreaView style={{ flex: 1 }}>
@@ -75,6 +77,7 @@ export default function OrgCadastro1({ navigation }) {
 
           <MaskedTextInput
             mask="99.999.999/9999-99"
+            keyboardType='numeric'
             style={est.textBox}
             placeholder='CNPJ'
             placeholderTextColor='lightGray'
@@ -91,8 +94,13 @@ export default function OrgCadastro1({ navigation }) {
             onChangeText={setEmail}
           />
           <MaskedTextInput
-            mask="(99) 99999-9999"
-            onChangeText={(masked) => {
+            mask={mask}
+            onChangeText={(masked, unmasked) => {
+              if (unmasked.length <= 10) {
+                setMask("(99) 9999-99999");
+              } else {
+                setMask("(99) 99999-9999");
+              }
               setTelefone(masked);
             }}
             value={telefone}

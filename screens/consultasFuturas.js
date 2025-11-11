@@ -55,7 +55,6 @@ export default function ClinicasMapa() {
               <Text style={styles.endereco}>{item.endereco}</Text>
               <Text style={styles.info}>📞 {item.telefone}</Text>
               <Text style={styles.info}>🕘 {item.horarioSemana}</Text>
-              <Text style={styles.info}>👍 {item.avaliacao}</Text>
             </TouchableOpacity>
           )}
         />

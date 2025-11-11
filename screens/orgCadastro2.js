@@ -37,6 +37,7 @@ export default function OrgCadastro2({ navigation }) {
 
           <MaskedTextInput
             mask="99999-999" 
+            keyboardType='numeric'
             style={est.textBox} 
             placeholder='CEP' 
             placeholderTextColor='lightGray'

@@ -133,7 +133,11 @@ export default function OrgPerfil({ navigation }) {
   const [deleteConfirm, setDeleteConfirm] = useState(false);
 
   if (!clinicaData) {
-    return <Text>Carregando dados...</Text>;
+    return (
+      <View style={{display: 'flex', alignContent: 'center', justifyContent: 'center'}}>
+        <Text>Carregando dados...</Text>
+      </View>
+    );
   }
 
   {/* Editar Imagem */ }
@@ -296,7 +300,7 @@ export default function OrgPerfil({ navigation }) {
         <View key={item.id} style={{ width: '100%', marginBottom: 10 }}>
           <Text style={est.label}>{item.label}</Text>
           <View style={est.textBox}>
-            <Text style={{ flex: 1 }}>{item.valor}</Text>
+            <Text style={{ flex: 1 }}>{item.valor || "Nenhum"}</Text>
             <TouchableOpacity
               onPress={() => handleEdit(item, sectionKey)}
               style={{ marginLeft: 8, alignItems: 'flex-end' }}
