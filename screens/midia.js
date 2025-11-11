@@ -131,6 +131,7 @@ const style = StyleSheet.create({
   imagem: {
     width: '100%',
     height: '50%',
+    borderRadius:
   },
   data: {
     fontSize: 14,
