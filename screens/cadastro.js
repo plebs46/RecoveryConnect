@@ -3,7 +3,6 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { useState } from 'react';
 import { Ionicons } from '@expo/vector-icons';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
-import { MaskedTextInput } from 'react-native-mask-text';
 import { supabase } from '../lib/supabase';
 
 export default function Cadastro({ navigation }) {
