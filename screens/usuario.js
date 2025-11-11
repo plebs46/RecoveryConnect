@@ -191,10 +191,8 @@ export default function Usuario({ navigation }) {
 
       if (buscaError) console.log("Erro ao buscar imagem:", buscaError);
 
-      // Se existir imagem, apagar do storage
       if (data?.imagem_url) {
         const filePath = extractStoragePath(data.imagem_url);
-        // Ex: "user_images/1762629027779.jpg"
 
         const { error: storageError } = await supabase
           .storage

@@ -23,10 +23,8 @@ import OrgLogin from './orgLogin';
 import OrgCadastro1 from './orgCadastro1';
 import OrgCadastro2 from './orgCadastro2';
 import OrgCadastro3 from './orgCadastro3';
-import OrgCadastro4 from './orgCadastro4';
 import OrgEspera from './orgEspera';
 import OrgPerfil from './orgPerfil';
-import OrgPerfilEdit from './orgPerfilEdit';
 import OrgPerfilDias from './orgPerfilDias';
 import OrgPerfilSenhaEdit from './orgPerfilSenhaEdit';
 
@@ -62,10 +60,8 @@ export {
   OrgCadastro1,
   OrgCadastro2,
   OrgCadastro3,
-  OrgCadastro4,
   OrgEspera,
   OrgPerfil,
-  OrgPerfilEdit,
   OrgPerfilDias,
   OrgPerfilSenhaEdit,
 }

@@ -8,10 +8,10 @@ import { MaskedTextInput } from 'react-native-mask-text';
 import { useSignup } from '../context/UserSignupContext';
 
 const data = [
-  { label: 'Clínica pública', value: 'clinica-publica' },
-  { label: 'Clínica privada', value: 'clinica-privada' },
-  { label: 'ONG', value: 'ong' },
-  { label: 'Projetos de comunidades e igrejas', value: 'projetos' },
+  { label: 'Clínica pública', value: 'Clínica Pública' },
+  { label: 'Clínica privada', value: 'Clínica Privada' },
+  { label: 'ONG', value: 'ONG' },
+  { label: 'Projetos de comunidades e igrejas', value: 'Projetos' },
 ];
 
 export default function OrgCadastro1({ navigation }) {
@@ -144,7 +144,7 @@ export default function OrgCadastro1({ navigation }) {
 
 
           <TouchableOpacity style={est.button} onPress={() => navigation.navigate('OrgCadastro2')}>
-            <Text style={{ alignSelf: 'center', fontWeight: 'bold', }}>Etapa 1 de 4</Text>
+            <Text style={{ alignSelf: 'center', fontWeight: 'bold', }}>Etapa 1 de 3</Text>
           </TouchableOpacity>
 
           <View style={est.loginRow}>

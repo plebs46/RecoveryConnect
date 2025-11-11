@@ -10,7 +10,6 @@ export const UserSignupProvider = ({ children }) => {
   const [telefone, setTelefone] = useState('');
   const [rede_social, setRede_social] = useState('');
   const [senha, setSenha] = useState('');
-  const [foto, setFoto] = useState('');
   const [cep, setCep] = useState('');
   const [rua, setRua] = useState('');
   const [numero, setNumero] = useState('');
@@ -28,7 +27,6 @@ export const UserSignupProvider = ({ children }) => {
         telefone, setTelefone,
         rede_social, setRede_social,
         senha, setSenha,
-        foto, setFoto,
         cep, setCep,
         rua, setRua,
         numero, setNumero,
