@@ -1,5 +1,6 @@
 import { View, Text, TouchableOpacity, Image, StyleSheet, ScrollView, TextInput, Alert } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import { useState } from 'react';
 import { supabase } from '../lib/supabase';
 
@@ -120,68 +121,74 @@ export default function DiarioNovo({ navigation }) {
 
   return (
     <ScrollView>
-      <View style={style.container}>
-        <View style={style.header} />
-        <View style={{ marginTop: 30, width: '80%', flexDirection: 'row', alignItems: 'center', marginBottom: 20 }}>
-          <TouchableOpacity style={{ padding: 10, marginRight: 10 }} onPress={() => navigation.navigate("Diario")}>
-            <Icon
-              name={'arrow-left'}
-              size={30}
-            />
-          </TouchableOpacity>
-          <Text style={style.title}>Registre o seu dia</Text>
-        </View>
-
-        {perguntas.map((pergunta) => (
-          <View key={pergunta.id} style={style.questionContainer}>
-            <Text style={style.questionTitle}>{pergunta.titulo}</Text>
-            <View style={style.optionsContainer}>
-              {pergunta.opcoes.map((opcao) => (
-                <TouchableOpacity
-                  key={opcao.id}
-                  style={[
-                    style.optionButton,
-                    pergunta.estado === opcao.label && style.selectedButton,
-                  ]}
-                  onPress={() => pergunta.setEstado(opcao.label)}
-                >
-                  <Image
-                    source={opcao.icon}
-                    style={style.icon}
-                  />
-                  <Text
-                    style={[
-                      style.label,
-                      pergunta.estado === opcao.label && style.selectedLabel,
-                    ]}
-                  >
-                    {opcao.label}
-                  </Text>
-                </TouchableOpacity>
-              ))}
-            </View>
+      <KeyboardAwareScrollView
+        enableOnAndroid={true}
+        extraScrollHeight={20}
+        showsVerticalScrollIndicator={false}
+      >
+        <View style={style.container}>
+          <View style={style.header} />
+          <View style={{ marginTop: 30, width: '80%', flexDirection: 'row', alignItems: 'center', marginBottom: 20 }}>
+            <TouchableOpacity style={{ padding: 10, marginRight: 10 }} onPress={() => navigation.navigate("Diario")}>
+              <Icon
+                name={'arrow-left'}
+                size={30}
+              />
+            </TouchableOpacity>
+            <Text style={style.title}>Registre o seu dia</Text>
           </View>
-        ))}
 
-        <View style={style.questionContainer}>
-          <Text style={style.questionTitle}>Anote o seu dia livremente (opcional)</Text>
-          <TextInput style={style.comentario}
-            multiline={true}
-            numberOfLines={5}
-            placeholder="Anote qualquer coisa aqui..."
-            value={respostaCmnt}
-            onChangeText={setRespostaCmnt}
-          />
+          {perguntas.map((pergunta) => (
+            <View key={pergunta.id} style={style.questionContainer}>
+              <Text style={style.questionTitle}>{pergunta.titulo}</Text>
+              <View style={style.optionsContainer}>
+                {pergunta.opcoes.map((opcao) => (
+                  <TouchableOpacity
+                    key={opcao.id}
+                    style={[
+                      style.optionButton,
+                      pergunta.estado === opcao.label && style.selectedButton,
+                    ]}
+                    onPress={() => pergunta.setEstado(opcao.label)}
+                  >
+                    <Image
+                      source={opcao.icon}
+                      style={style.icon}
+                    />
+                    <Text
+                      style={[
+                        style.label,
+                        pergunta.estado === opcao.label && style.selectedLabel,
+                      ]}
+                    >
+                      {opcao.label}
+                    </Text>
+                  </TouchableOpacity>
+                ))}
+              </View>
+            </View>
+          ))}
+
+          <View style={style.questionContainer}>
+            <Text style={style.questionTitle}>Anote o seu dia livremente (opcional)</Text>
+            <TextInput style={style.comentario}
+              multiline={true}
+              numberOfLines={5}
+              placeholder="Anote qualquer coisa aqui..."
+              value={respostaCmnt}
+              onChangeText={setRespostaCmnt}
+            />
+          </View>
+
+          <TouchableOpacity
+            style={[style.button, !todasRespondidas && { backgroundColor: '#caceceff' }]}
+            onPress={salvarRespostas}
+            disabled={!todasRespondidas}
+          >
+            <Text style={{ fontWeight: 'bold', alignSelf: 'center' }}>Atualizar</Text>
+          </TouchableOpacity>
         </View>
-
-        <TouchableOpacity 
-          style={[style.button, !todasRespondidas && { backgroundColor: '#caceceff' }]}
-          onPress={salvarRespostas}
-          disabled={!todasRespondidas}
-        >
-          <Text style={{ fontWeight: 'bold', alignSelf: 'center' }}>Atualizar</Text>
-        </TouchableOpacity>
-      </View>
+      </KeyboardAwareScrollView>
     </ScrollView>
   );
 }
@@ -216,7 +223,7 @@ const style = StyleSheet.create({
     shadowOpacity: 0.25,
     shadowRadius: 3.84,
     elevation: 4,
-    backgroundColor: '#DEFFFF',
+    backgroundColor: '#ebffffff',
     width: '80%',
     borderRadius: 15,
     padding: 20,
@@ -230,16 +237,15 @@ const style = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-around',
     alignItems: 'center',
-    width: '90%',
   },
   optionButton: {
     alignItems: 'center',
-    padding: 10,
+    padding: 6,
   },
   selectedButton: {
-    backgroundColor: '#e0f7fa',
+    backgroundColor: '#d3faffff',
     borderRadius: 10,
-    padding: 15,
+    padding: 10,
   },
   icon: {
     width: 20,

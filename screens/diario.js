@@ -61,7 +61,7 @@ export default function Diario({ navigation }) {
       <Text style={style.dados}>{"Produtividade " + item.resposta_2}</Text>
       <Text style={style.dados}>{"Controle " + item.resposta_3}</Text>
       <Text style={style.dados}>{"Tempo " + item.resposta_4}</Text>
-      {item.coment?.trim() ? (
+      {item.resposta_livre?.trim() ? (
         <Text style={style.coment}>{item.resposta_livre}</Text>
       ) : null}
     </View>

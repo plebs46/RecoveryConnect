@@ -177,7 +177,6 @@ const est = StyleSheet.create({
     paddingBottom: 160,
     paddingTop: 20,
     backgroundColor: 'white',
-
   },
   logo: {
     height: '25%',

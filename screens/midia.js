@@ -120,10 +120,10 @@ const style = StyleSheet.create({
     marginVertical: 10,
     marginHorizontal: 10,
     width: Dimensions.get('window').width * 0.6,
-    height: Dimensions.get('window').height * 0.35,
+    height: Dimensions.get('window').height * 0.32,
   },
   tituloMidia: {
-    fontSize: 18,
+    fontSize: 16,
     marginVertical: 10,
     width: '90%',
     height: '35%',
@@ -131,7 +131,7 @@ const style = StyleSheet.create({
   imagem: {
     width: '100%',
     height: '50%',
-    borderRadius:
+    borderRadius: 10,
   },
   data: {
     fontSize: 14,

@@ -1,45 +1,112 @@
-import React, { useState } from 'react';
-import { View, Text, FlatList, TouchableOpacity, StyleSheet, Image } from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { supabase } from '../lib/supabase';
+import { View, Text, FlatList, TouchableOpacity, StyleSheet, Image, ActivityIndicator } from 'react-native';
 import MapView, { Marker } from 'react-native-maps';
+import { googleKey } from '../constants/supabase';
 
 export default function ClinicasMapa() {
   const [clinicaSelecionada, setClinicaSelecionada] = useState(null);
 
-  const clinicas = [
-    {
-      id: '1',
-      nome: 'AmorSaúde Taboão da Serra',
-      endereco: 'Av. Dr. José Maciel, 688 - Taboão da Serra',
-      latitude: -23.612980560824774,
-      longitude: -46.76352812301982,
-      telefone: '(11) 3132-8738',
-      horarioSemana: 'Segunda a Sexta 7:00 - 18:00',
-      avaliacao: '⭐⭐⭐ (367)',
-      imagem: require('../imagens/amor-saude-foto.jpeg'),
-    },
-    {
-      id: '2',
-      nome: 'Psicologia Taboão da Serra',
-      endereco: 'Av. Vida Nova, 28 - Taboão da Serra',
-      latitude: -23.60962169397969, 
-      longitude: -46.769529375695434,
-      telefone: '(11) 98515-4367',
-      horarioSemana: 'Segunda a Sexta 8:00 - 21:00',
-      avaliacao: '⭐⭐⭐⭐⭐ (19)',
-      imagem: require('../imagens/psicoTaboao.png'),
-    },
-    {
-      id: '3',
-      nome: 'Clínica Master Health',
-      endereco: 'Rua B, 456 - Taboão da Serra',
-      latitude: -23.610616595326317, 
-      longitude: -46.75891965850886,
-      telefone: '(11) 98515-4367',
-      horarioSemana: 'Segunda a Sexta 9:00 - 19:00',
-      avaliacao: '⭐⭐⭐⭐⭐ (280)',
-      imagem: require('../imagens/logoEx.png'),
-    },
-  ];
+  const [clinicas, setClinicas] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const carregarClinicas = async () => {
+      try {
+        const { data, error } = await supabase
+          .from('organizacao')
+          .select(`
+            codigo,
+            nome,
+            imagem_perfil,
+            tipo,
+            telefone,
+            rede_social,
+            endereco (
+              cep,
+              rua,
+              numero,
+              bairro,
+              cidade,
+              estado
+            )
+          `);
+
+        if (error) {
+          console.error('Erro ao buscar organizações:', error);
+          return;
+        }
+
+        const clinicasFormatadas = data.map((item) => ({
+          id: item.codigo,
+          nome: item.nome,
+          telefone: item.telefone ?? 'Sem telefone',
+          tipo: item.tipo ?? 'Não informado',
+          rede_social: item.rede_social,
+          imagem: item.imagem_perfil
+            ? { uri: item.imagem_perfil }
+            : require('../imagens/logoEx.png'),
+          endereco: Array.isArray(item.endereco) && item.endereco.length > 0
+            ? `${item.endereco[0].rua}, ${item.endereco[0].numero} - ${item.endereco[0].bairro}, ${item.endereco[0].cidade} - ${item.endereco[0].estado}, ${item.endereco[0].cep}`
+            : 'Endereço não informado',
+        }));
+
+        setClinicas(clinicasFormatadas);
+      } catch (err) {
+        console.error('Erro inesperado:', err);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    carregarClinicas();
+  }, []);
+
+  const getCoordinates = async (address) => {
+    try {
+      const apiKey = googleKey;
+      const response = await fetch(
+        `https://maps.googleapis.com/maps/api/geocode/json?address=${encodeURIComponent(address)}&key=${apiKey}`
+      );
+      const data = await response.json();
+
+      if (data.results && data.results.length > 0) {
+        const location = data.results[0].geometry.location;
+        return {
+          latitude: location.lat,
+          longitude: location.lng,
+        };
+      } else {
+        Alert.alert('Erro', 'Endereço não encontrado.');
+        return null;
+      }
+    } catch (error) {
+      console.error('Erro ao buscar coordenadas:', error);
+      Alert.alert('Erro', 'Não foi possível converter o endereço.');
+      return null;
+    }
+  };
+
+  const handleSelecionarClinica = async (item) => {
+    const coords = await getCoordinates(item.endereco);
+
+    if (coords) {
+      setClinicaSelecionada({
+        ...item,
+        latitude: coords.latitude,
+        longitude: coords.longitude,
+      });
+    }
+  };
+
+  if (loading) {
+    return (
+      <View style={styles.container}>
+        <ActivityIndicator size="large" color="#5ce1e6" />
+        <Text style={{ textAlign: 'center', marginTop: 10 }}>Carregando organizações...</Text>
+      </View>
+    );
+  }
 
   return (
     <View style={styles.container}>
@@ -49,12 +116,15 @@ export default function ClinicasMapa() {
           data={clinicas}
           keyExtractor={(item) => item.id}
           renderItem={({ item }) => (
-            <TouchableOpacity style={styles.card} onPress={() => setClinicaSelecionada(item)}>
+            <TouchableOpacity style={styles.card} onPress={() => handleSelecionarClinica(item)}>
               <Image source={item.imagem} style={styles.imagemClinica} />
               <Text style={styles.nome}>{item.nome}</Text>
               <Text style={styles.endereco}>{item.endereco}</Text>
               <Text style={styles.info}>📞 {item.telefone}</Text>
-              <Text style={styles.info}>🕘 {item.horarioSemana}</Text>
+              <Text style={styles.info}>🏷️ {item.tipo}</Text>
+              {item.rede_social ? (
+                <Text style={styles.info}>🌐 {item.rede_social}</Text>
+              ) : null}
             </TouchableOpacity>
           )}
         />
@@ -151,10 +221,11 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
   imagemClinica: {
-    width: '100%',
+    width: 150,
     height: 150,
-    borderRadius: 8,
+    borderRadius: 100,
     marginBottom: 10,
+    alignSelf: 'center',
   },
   info: {
     fontSize: 13,
