@@ -1,69 +1,64 @@
-import {View, Text, TouchableOpacity, Image, StyleSheet, FlatList, Linking, Dimensions} from 'react-native';
+import { View, Text, TouchableOpacity, Image, StyleSheet, FlatList, Linking, Dimensions, ActivityIndicator } from 'react-native';
+import { supabase } from '../lib/supabase';
+import React, { useEffect, useState } from 'react';
 
-export default function Midia({navigation}) {
-  const midia = [
-    {
-      id: 1,
-      imagem: require('../imagens/midia/md1.jpg'),
-      titulo: 'Problemas escolares e o consumo de álcool e outras drogas entre adolescentes',
-      data: 'Maio 2014',
-      link: 'https://www.scielo.br/j/pee/a/Q9vFZrYKyXL9kq7FkHP7fhy/',
-    },
-    {
-      id: 2,
-      imagem: require('../imagens/midia/md2.jpg'),
-      titulo: 'Mulheres dependentes químicas: quais as causas do aumento do consumo abusivo de álcool e drogas?',
-      data: 'Julho 2024',
-      link: 'https://hospitalsantamonica.com.br/mulheres-dependentes-quimicas-quais-as-causas-do-aumento-do-consumo-abusivo-de-alcool-e-drogas/',
-    },
-    {
-      id: 3,
-      imagem: require('../imagens/midia/md3.jpg'),
-      titulo: 'Filhos de usuárias de drogas desenvolvem dependência química',
-      data: 'Abril 2015',
-      link: 'https://hospitalsantamonica.com.br/filhos-de-usuarias-de-drogas-desenvolvem-dependencia-quimica/',
-    },
-  ];
+export default function Midia({ navigation }) {
+  const [midia, setMidia] = useState([]);
+  const [nossasObras, setNossasObras] = useState([]);
+  const [loading, setLoading] = useState(true);
 
-  const nossasObras = [
-    {
-      id: 1,
-      imagem: require('../imagens/midia/nmd1.png'),
-      titulo: 'Health Tech Info - Vape, cigarro, maconha e cocaína: o impacto na saúde',
-      data: 'Setembro 2024',
-      link: 'https://www.canva.com/design/DAGIfJdIpLQ/G9C1vq1x19FiNtJ1tzLIiQ/view?utm_content=DAGIfJdIpLQ&utm_campaign=designshare&utm_medium=link&utm_source=editor',
-    },
-    {
-      id: 2,
-      imagem: require('../imagens/midia/nmd2.png'),
-      titulo: 'A Cocaína e seus efeitos ao corpo humano',
-      data: 'Junho 2024',
-      link: 'https://www.canva.com/design/DAGImaFhcnA/napj1fMyvXm2SaQ7t42P0Q/view?utm_content=DAGImaFhcnA&utm_campaign=designshare&utm_medium=link&utm_source=editor',
-    },
-    {
-      id: 3,
-      imagem: require('../imagens/midia/nmd3.png'),
-      titulo: 'O que são metais pesados? Os principais metais encontrados no cigarro eletrônico',
-      data: 'Junho 2024',
-      link: 'https://etecspgov.sharepoint.com/sites/DependnciaQumica2B-divA/Shared%20Documents/metais-pesados_64366582.png?web=1',
-    },
-  ];
+  useEffect(() => {
+    const fetchConteudo = async () => {
+      try {
+        // Busca todos os conteúdos
+        const { data, error } = await supabase
+          .from('conteudo_digital')
+          .select('*')
+          .order('data_publicacao', { ascending: false });
+
+        if (error) throw error;
+
+        // Separa por tipo
+        const midiaList = data.filter(item => item.tipo === 'midia');
+        const obrasList = data.filter(item => item.tipo === 'obra');
+
+        setMidia(midiaList);
+        setNossasObras(obrasList);
+      } catch (error) {
+        console.error('Erro ao buscar conteúdos:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchConteudo();
+  }, []);
 
   const renderItem = ({ item }) => (
     <TouchableOpacity style={style.card} onPress={() => Linking.openURL(item.link)}>
-      <Image style={style.imagem} source={item.imagem}/>
+      {item.imagem_url ? (
+        <Image style={style.imagem} source={{ uri: item.imagem_url }} />
+      ) : null}
       <Text style={style.tituloMidia}>{item.titulo}</Text>
-      <Text style={style.data}>{item.data}</Text>
+      <Text style={style.data}>{item.data_publicacao}</Text>
     </TouchableOpacity>
   );
 
+  if (loading) {
+    return (
+      <View style={[style.container, { justifyContent: 'center', alignItems: 'center' }]}>
+        <ActivityIndicator size="large" color="#007AFF" />
+      </View>
+    );
+  }
+
   return (
     <View style={style.container}>
-      <View style={style.header}/>
+      <View style={style.header} />
 
       <Text style={style.title}>Obras recomendadas</Text>
       <FlatList
-        style={{width: '90%', padding: 5}}
+        style={{ width: '90%', padding: 5 }}
         data={midia}
         keyExtractor={(item) => item.id}
         renderItem={renderItem}
@@ -73,7 +68,7 @@ export default function Midia({navigation}) {
 
       <Text style={style.title}>Produzidas pela equipe</Text>
       <FlatList
-        style={{width: '90%', padding: 5}}
+        style={{ width: '90%', padding: 5 }}
         data={nossasObras}
         keyExtractor={(item) => item.id}
         renderItem={renderItem}
@@ -87,9 +82,9 @@ export default function Midia({navigation}) {
 const style = StyleSheet.create({
   container: {
     flex: 1,
-    flexDirection:'column',
+    flexDirection: 'column',
     backgroundColor: 'white',
-    alignItems:'center',
+    alignItems: 'center',
   },
   header: {
     backgroundColor: '#5ce1e6',
@@ -101,7 +96,7 @@ const style = StyleSheet.create({
     shadowRadius: 3.84,
     elevation: 4,
   },
-  title:{
+  title: {
     fontSize: 24,
     fontWeight: 'bold',
     marginTop: 30,
