@@ -343,6 +343,20 @@ export default function Usuario({ navigation }) {
         </Modal>
 
         <View style={{ width: '80%', marginBottom: 10 }}>
+          <Text style={style.label}>Substâncias</Text>
+          <TouchableOpacity style={[style.textBox, style.buttonContainer]} onPress={() => navigation.navigate('UsuarioSubstancias')}>
+            <Text>Ver substâncias</Text>
+            <Ionicons name="chevron-forward" size={20} color="#555" />
+          </TouchableOpacity>
+        </View>
+        <View style={{ width: '80%', marginBottom: 10 }}>
+          <Text style={style.label}>Assinatura</Text>
+          <TouchableOpacity style={[style.textBox, style.buttonContainer]} onPress={() => navigation.navigate('UsuarioAssinatura')}>
+            <Text>Ver detalhes</Text>
+            <Ionicons name="chevron-forward" size={20} color="#555" />
+          </TouchableOpacity>
+        </View>
+        <View style={{ width: '80%', marginBottom: 10 }}>
           <Text style={style.label}>Senha</Text>
           <TouchableOpacity style={[style.textBox, style.buttonContainer]} onPress={() => navigation.navigate('UsuarioDados')}>
             <Text>Alterar senha</Text>
@@ -374,7 +388,7 @@ export default function Usuario({ navigation }) {
           <View style={style.modalOverlay}>
             <View style={style.modalBox}>
               <Text style={{ fontWeight: "bold", marginBottom: 10, fontSize: 16 }}>Sair da conta?</Text>
-              <Text style={{ marginBottom: 20 }}>Isso vai apagar sua conta para sempre. Não poderá desfazer.</Text>
+              <Text style={{ marginBottom: 20 }}>Você sairá da sua conta, e precisará entrar novamente para acessar.</Text>
               <View style={{ flexDirection: 'row', justifyContent: 'flex-end' }}>
                 {/* Cancelar */}
                 <TouchableOpacity onPress={() => setLogoutModalVisivel(false)} style={style.cancelBtn}>

@@ -4,7 +4,7 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import {
   OrgLogin, TipoUser, Login, Cadastro, Escolha, Tutorial1, Tutorial2, Tutorial3, Tutorial4,
   Diario, DiarioNovo, ConsultasFuturas, InfMedico, Midia, Desafios, DesafiosNovo, DesafiosDetalhes,
-  Usuario, UsuarioDados, Notificacao, OrgCadastro1, OrgCadastro2, OrgCadastro3, OrgEspera,
+  Usuario, UsuarioAssinatura, UsuarioDados, UsuarioSubstancias, OrgCadastro1, OrgCadastro2, OrgCadastro3, OrgEspera,
   OrgPerfil, OrgPerfilDias, OrgPerfilSenhaEdit,
 } from './screens/files';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
@@ -229,8 +229,13 @@ function UsuarioStackNavigator() {
         options={{ headerShown: false }}
       />
       <Stack.Screen
-        name="Notificacao"
-        component={Notificacao}
+        name="UsuarioAssinatura"
+        component={UsuarioAssinatura}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name="UsuarioSubstancias"
+        component={UsuarioSubstancias}
         options={{ headerShown: false }}
       />
     </Stack.Navigator>
