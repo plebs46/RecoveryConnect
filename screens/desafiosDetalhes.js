@@ -8,6 +8,7 @@ export default function DesafiosDetalhes({ navigation }) {
   const [carregando, setCarregando] = useState(false);
   const [modalVisivel, setModalVisivel] = useState(false);
   const [metaSelecionada, setMetaSelecionada] = useState(null);
+  const [acao, setAcao] = useState("desistir");
 
   async function carregarMetasUsuario() {
     try {
@@ -64,6 +65,14 @@ export default function DesafiosDetalhes({ navigation }) {
     }
   }
 
+  function podeConcluir(item) {
+    const hoje = new Date();
+    const fim = new Date(item.data_fim);
+
+    return hoje >= fim;
+  }
+
+
   return (
     <View style={style.container}>
       <View style={style.headerContainer}>
@@ -114,11 +123,25 @@ export default function DesafiosDetalhes({ navigation }) {
                 style={style.botaoExcluir}
                 onPress={() => {
                   setMetaSelecionada(item);
+                  setAcao("desistir");
                   setModalVisivel(true);
                 }}
               >
                 <Text style={{ color: 'white', fontWeight: 'bold' }}>Desistir</Text>
               </TouchableOpacity>
+
+              {podeConcluir(item) && (
+                <TouchableOpacity
+                  style={[style.botaoExcluir, { backgroundColor: '#28a745' }]} // verde
+                  onPress={() => {
+                    setMetaSelecionada(item);
+                    setAcao("concluir");
+                    setModalVisivel(true);
+                  }}
+                >
+                  <Text style={{ color: 'white', fontWeight: 'bold' }}>Concluir</Text>
+                </TouchableOpacity>
+              )}
             </View>
           )}
         />
@@ -131,12 +154,14 @@ export default function DesafiosDetalhes({ navigation }) {
       >
         <View style={style.modalFundo}>
           <View style={style.modalCard}>
-            <Text style={{ fontSize: 18, fontWeight: 'bold', marginBottom: 20 }}>
-              Deseja realmente desistir desta meta?
+            <Text style={{ fontSize: 18, fontWeight: 'bold', marginBottom: 20, textAlign: 'center' }}>
+              {acao === "desistir"
+                ? "Deseja realmente desistir desta meta?"
+                : "Parabéns! Você concluiu sua meta!"}
             </Text>
 
             {metaSelecionada && (
-              <Text style={{ textAlign: 'center', marginBottom: 25, fontSize: 20 }}>
+              <Text style={{ textAlign: 'center', marginBottom: 25, fontSize: 14 }}>
                 {metaSelecionada.metas.descricao}
               </Text>
             )}
@@ -151,9 +176,12 @@ export default function DesafiosDetalhes({ navigation }) {
 
               <TouchableOpacity
                 onPress={() => excluirMeta(metaSelecionada.id_meta_usuario)}
-                style={style.modalConfirm}
+                style={[
+                  style.modalConfirm,
+                  acao === "concluir" && { backgroundColor: "#28a745" }
+                ]}
               >
-                <Text style={{ color: 'white' }}>Desistir</Text>
+                <Text style={{ color: 'white', fontWeight: 'bold' }}>{acao === "desistir" ? "Desistir" : "Concluir"}</Text>
               </TouchableOpacity>
             </View>
           </View>

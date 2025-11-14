@@ -1,9 +1,10 @@
-import { View, Text, TextInput, TouchableOpacity, Image, StyleSheet, ScrollView, Alert, } from 'react-native';
+import { View, Text, TextInput, TouchableOpacity, Image, StyleSheet, ScrollView, Alert, Linking } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useState } from 'react';
 import { Ionicons } from '@expo/vector-icons';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import { supabase } from '../lib/supabase';
+import CheckBox from "./../components/CheckBox";
 
 export default function Cadastro({ navigation }) {
   const [showPassword, setShowPassword] = useState(false);
@@ -12,6 +13,11 @@ export default function Cadastro({ navigation }) {
   const [email, setEmail] = useState('');
   const [senha, setSenha] = useState('');
   const [loading, setLoading] = useState(false);
+  const [aceitou, setAceitou] = useState(false);
+
+  function handleCheck() {
+    setAceitou((prev) => !prev);
+  }
 
   async function handleSignUp() {
     setLoading(true);
@@ -67,7 +73,7 @@ export default function Cadastro({ navigation }) {
           <TextInput style={est.textBox} placeholder='Nome de Usuário' placeholderTextColor='lightGray' value={nome} onChangeText={setNome} />
           <TextInput style={est.textBox} placeholder='E-mail' placeholderTextColor='lightGray' value={email} onChangeText={setEmail} />
           <TextInput style={est.textBox} placeholder='Cidade' placeholderTextColor='lightGray' value={cidade} onChangeText={setCidade} />
-          
+
           <View style={est.passwordContainer}>
             <TextInput
               style={est.passwordInput}
@@ -100,7 +106,38 @@ export default function Cadastro({ navigation }) {
             </TouchableOpacity>
           </View>
 
-          <TouchableOpacity style={est.button} onPress={handleSignUp}>
+          <View style={{ display: 'flex', flexDirection: 'row', justifyContent: 'center', alignItems: 'center', width: '70%' }}>
+            <CheckBox
+              label=""
+              value={aceitou}
+              onChange={handleCheck}
+            />
+            <Text style={{ fontSize: 12 }}>Li e concordo com os
+              <Text
+                style={{
+                  color: "#5ce1e6",       // azul claro
+                  textDecorationLine: "underline",
+                  fontWeight: "500",
+                }}
+                onPress={() =>
+                  Linking.openURL(
+                    "https://gntknwmgxgvgxffxdwin.supabase.co/storage/v1/object/public/Documentos/politica-de-seguranca-RecoveryConnect.pdf"
+                  )
+                }
+              >
+                Termos de Uso e Política de Privacidade
+              </Text>
+            </Text>
+          </View>
+
+          <TouchableOpacity
+            style={[
+              est.button,
+              !aceitou && { backgroundColor: '#cececeff', }
+            ]}
+            disabled={!aceitou}   
+            onPress={handleSignUp}
+          >
             <Text style={{ alignSelf: 'center', fontWeight: 'bold' }}>{loading ? 'Carregando...' : 'Cadastrar'}</Text>
           </TouchableOpacity>
 

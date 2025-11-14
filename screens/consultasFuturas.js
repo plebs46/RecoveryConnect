@@ -29,6 +29,11 @@ export default function ClinicasMapa() {
               bairro,
               cidade,
               estado
+            ),
+            organizacao_horarios (
+              dia_semana,
+              hora_inicio,
+              hora_fim
             )
           `);
 
@@ -37,19 +42,61 @@ export default function ClinicasMapa() {
           return;
         }
 
-        const clinicasFormatadas = data.map((item) => ({
-          id: item.codigo,
-          nome: item.nome,
-          telefone: item.telefone ?? 'Sem telefone',
-          tipo: item.tipo ?? 'Não informado',
-          rede_social: item.rede_social,
-          imagem: item.imagem_perfil
-            ? { uri: item.imagem_perfil }
-            : require('../imagens/logoEx.png'),
-          endereco: Array.isArray(item.endereco) && item.endereco.length > 0
-            ? `${item.endereco[0].rua}, ${item.endereco[0].numero} - ${item.endereco[0].bairro}, ${item.endereco[0].cidade} - ${item.endereco[0].estado}, ${item.endereco[0].cep}`
-            : 'Endereço não informado',
-        }));
+        const nomeDias = [
+          'domingo',
+          'segunda-feira',
+          'terça-feira',
+          'quarta-feira',
+          'quinta-feira',
+          'sexta-feira',
+          'sábado',
+        ];
+
+        const clinicasFormatadas = data.map((item) => {
+          // Agrupar horários iguais
+          const horarios = item.organizacao_horarios || [];
+
+          // Cria um mapa onde a chave é "hora_inicio - hora_fim" e o valor é uma lista de dias
+          const grupos = {};
+          horarios.forEach((h) => {
+            const faixa = `${h.hora_inicio.slice(0, 5)} - ${h.hora_fim.slice(0, 5)}`;
+            if (!grupos[faixa]) grupos[faixa] = [];
+            grupos[faixa].push(h.dia_semana);
+          });
+
+          // Função auxiliar pra juntar dias de forma natural
+          const formatarDias = (dias) => {
+            const ordem = ['segunda', 'terça', 'quarta', 'quinta', 'sexta', 'sábado', 'domingo'];
+            dias.sort((a, b) => ordem.indexOf(a) - ordem.indexOf(b));
+
+            if (dias.length === 1) return dias[0];
+            if (dias.length === 2) return `${dias[0]} e ${dias[1]}`;
+            return `${dias[0]} a ${dias[dias.length - 1]}`;
+          };
+
+          // Montar texto final de horários
+          const horariosTexto =
+            Object.keys(grupos).length > 0
+              ? Object.entries(grupos)
+                .map(([faixa, dias]) => `${formatarDias(dias)}: ${faixa}`)
+                .join('\n')
+              : 'Horário não informado';
+
+          return {
+            id: item.codigo,
+            nome: item.nome,
+            telefone: item.telefone ?? 'Sem telefone',
+            tipo: item.tipo ?? 'Não informado',
+            rede_social: item.rede_social,
+            imagem: item.imagem_perfil
+              ? { uri: item.imagem_perfil }
+              : require('../imagens/logoEx.png'),
+            endereco: Array.isArray(item.endereco) && item.endereco.length > 0
+              ? `${item.endereco[0].rua}, ${item.endereco[0].numero} - ${item.endereco[0].bairro}, ${item.endereco[0].cidade} - ${item.endereco[0].estado}, ${item.endereco[0].cep}`
+              : 'Endereço não informado',
+            horarios: horariosTexto,
+          };
+        });
 
         setClinicas(clinicasFormatadas);
       } catch (err) {
@@ -120,6 +167,7 @@ export default function ClinicasMapa() {
               <Image source={item.imagem} style={styles.imagemClinica} />
               <Text style={styles.nome}>{item.nome}</Text>
               <Text style={styles.endereco}>{item.endereco}</Text>
+              <Text style={styles.info}>🕒 {item.horarios}</Text>
               <Text style={styles.info}>📞 {item.telefone}</Text>
               <Text style={styles.info}>🏷️ {item.tipo}</Text>
               {item.rede_social ? (

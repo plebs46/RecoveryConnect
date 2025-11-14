@@ -1,4 +1,4 @@
-import { View, Text, TextInput, TouchableOpacity, Image, StyleSheet } from 'react-native';
+import { View, Text, TextInput, TouchableOpacity, Image, StyleSheet, Linking } from 'react-native';
 import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import { Dropdown } from 'react-native-element-dropdown';
@@ -6,6 +6,7 @@ import React, { useState } from 'react';
 import { Ionicons } from '@expo/vector-icons';
 import { MaskedTextInput } from 'react-native-mask-text';
 import { useSignup } from '../context/UserSignupContext';
+import CheckBox from '../components/CheckBox';
 
 const data = [
   { label: 'Clínica pública', value: 'Clínica Pública' },
@@ -16,6 +17,11 @@ const data = [
 
 export default function OrgCadastro1({ navigation }) {
   const [showPassword, setShowPassword] = useState(false);
+  const [aceitou, setAceitou] = useState(false);
+
+  function handleCheck() {
+    setAceitou((prev) => !prev);
+  }
 
   const {
     nome, setNome,
@@ -150,8 +156,38 @@ export default function OrgCadastro1({ navigation }) {
             </TouchableOpacity>
           </View>
 
+          <View style={{ display: 'flex', flexDirection: 'row', justifyContent: 'center', alignItems: 'center', width: '70%' }}>
+            <CheckBox
+              label=""
+              value={aceitou}
+              onChange={handleCheck}
+            />
+            <Text style={{ fontSize: 12 }}>Li e concordo com os
+              <Text
+                style={{
+                  color: "#5ce1e6",       // azul claro
+                  textDecorationLine: "underline",
+                  fontWeight: "500",
+                }}
+                onPress={() =>
+                  Linking.openURL(
+                    "https://gntknwmgxgvgxffxdwin.supabase.co/storage/v1/object/public/Documentos/politica-de-seguranca-RecoveryConnect.pdf"
+                  )
+                }
+              >
+                Termos de Uso e Política de Privacidade
+              </Text>
+            </Text>
+          </View>
 
-          <TouchableOpacity style={est.button} onPress={() => navigation.navigate('OrgCadastro2')}>
+          <TouchableOpacity 
+            style={[
+              est.button,
+              !aceitou && { backgroundColor: '#cececeff', }
+            ]}
+            disabled={!aceitou}   
+            onPress={() => navigation.navigate('OrgCadastro2')}
+          >
             <Text style={{ alignSelf: 'center', fontWeight: 'bold', }}>Etapa 1 de 3</Text>
           </TouchableOpacity>
 

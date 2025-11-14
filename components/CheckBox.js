@@ -32,7 +32,7 @@ const style = StyleSheet.create({
     borderWidth: 1,
     borderRadius: 5,
     justifyContent: "center",
-    alignItems: "center"
+    alignItems: "center",
   },
   subsContainer: {
     flexDirection: 'row',
