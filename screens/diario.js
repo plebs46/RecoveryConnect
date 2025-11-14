@@ -40,14 +40,13 @@ export default function Diario({ navigation }) {
     carregarDiarios();
   }, []);
 
-  if (loading) {
-    return (
-      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-        <ActivityIndicator size="large" color="#00BFFF" />
-        <Text>Carregando diários...</Text>
-      </View>
-    );
-  }
+  const hoje = new Date().toLocaleDateString("pt-BR");
+
+  const diariosSemHoje = diarios.filter(d => {
+    const dataItem = new Date(d.data_criacao).toLocaleDateString("pt-BR");
+    return dataItem !== hoje;
+  });
+
 
   const renderItem = ({ item }) => (
     <View style={style.card}>
@@ -89,24 +88,76 @@ export default function Diario({ navigation }) {
     }
   }
 
+  const diarioDeHoje = diarios.find(d => {
+    const data = new Date(d.data_criacao);
+    const hoje = new Date();
+
+    return (
+      data.getDate() === hoje.getDate() &&
+      data.getMonth() === hoje.getMonth() &&
+      data.getFullYear() === hoje.getFullYear()
+    );
+  });
+
+  if (loading) {
+    return (
+      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+        <ActivityIndicator size="large" color="#00BFFF" />
+        <Text>Carregando diários...</Text>
+      </View>
+    );
+  }
+
   return (
     <View style={style.container}>
       <View style={style.header} />
       <Text style={style.title}>Seus registros</Text>
 
-      <View style={style.novoCont}>
-        <Text style={style.subtitle}>Registre o seu dia de hoje!</Text>
-        <View style={style.buttonCont}>
-          <Text style={style.text}>Faça seu diário clicando no botão ao lado.</Text>
-          <TouchableOpacity style={style.button} onPress={() => navigation.navigate("DiarioNovo")}>
-            <Text style={{ fontWeight: 'bold', alignSelf: 'center' }}>Escrever</Text>
-          </TouchableOpacity>
-        </View>
-      </View>
+      {
+        !diarioDeHoje ? (
+          <View style={style.novoCont}>
+            <Text style={style.subtitle}>Registre o seu dia de hoje!</Text>
 
-      <FlatList
+            <View style={style.buttonCont}>
+              <Text style={style.text}>
+                Faça seu diário clicando no botão ao lado.
+              </Text>
+
+              <TouchableOpacity
+                style={style.button}
+                onPress={() => navigation.navigate("DiarioNovo")}
+              >
+                <Text style={{ fontWeight: 'bold', alignSelf: 'center' }}>Escrever</Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        ) : (
+          <View style={[style.card, { width: '86%' }]}>
+            <View style={{
+              flexDirection: 'row',
+              justifyContent: 'space-between',
+              alignItems: 'center'
+            }}>
+              <Text style={style.subtitleHoje}>Seu diário de hoje</Text>
+              <TouchableOpacity onPress={() => openModal(diarioDeHoje)}>
+                <Feather name="trash" size={22} color="#ff6b6b" />
+              </TouchableOpacity>
+            </View>
+            <Text style={style.mediaDia}>{"O seu dia foi " + diarioDeHoje.resposta_1}</Text>
+            <Text style={style.dados}>{"Produtividade " + diarioDeHoje.resposta_2}</Text>
+            <Text style={style.dados}>{"Controle " + diarioDeHoje.resposta_3}</Text>
+            <Text style={style.dados}>{"Tempo " + diarioDeHoje.resposta_4}</Text>
+
+            {diarioDeHoje.resposta_livre?.trim() ? (
+              <Text style={style.coment}>{diarioDeHoje.resposta_livre}</Text>
+            ) : null}
+          </View>
+        )
+      }
+
+      < FlatList
         style={{ width: '90%', padding: 5 }}
-        data={diarios}
+        data={diariosSemHoje}
         keyExtractor={(item) => item.id}
         renderItem={renderItem}
         showsVerticalScrollIndicator={false}
@@ -185,6 +236,11 @@ const style = StyleSheet.create({
     marginTop: 15,
     marginBottom: 10,
   },
+  subtitleHoje: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    marginBottom: 10,
+  },
 
   text: {
     fontSize: 16,
@@ -209,11 +265,6 @@ const style = StyleSheet.create({
     padding: 10,
     width: '85%',
     borderRadius: 20,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 1 },
-    shadowOpacity: 0.25,
-    shadowRadius: 3.84,
-    elevation: 4,
     marginBottom: 20,
   },
 

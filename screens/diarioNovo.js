@@ -12,6 +12,9 @@ export default function DiarioNovo({ navigation }) {
   const [respostaCmnt, setRespostaCmnt] = useState('');
 
   async function salvarDiario(respostasColetadas) {
+    const agora = new Date();
+    const dataLocal = new Date(agora.getTime() - agora.getTimezoneOffset() * 60000);
+
     const { data, error } = await supabase.auth.getSession();
 
     if (error || !data.session) {
@@ -31,7 +34,7 @@ export default function DiarioNovo({ navigation }) {
           resposta_3: respostasColetadas.controle,
           resposta_4: respostasColetadas.tempo,
           resposta_livre: respostasColetadas.comentario,
-          data_criacao: new Date(),
+          data_criacao: dataLocal,
         },
       ]);
 

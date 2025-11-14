@@ -13,12 +13,12 @@ export default function UsuarioAssinatura({ navigation }) {
       </View>
 
       <View style={style.card}>
-        <Text style={style.preco}>R$ 11,90 / mês</Text>
+        <Text style={style.preco}>R$ 8,90 / mês</Text>
 
         <Text style={style.subTitle}>Benefícios incluídos:</Text>
 
         <View style={style.lista}>
-          <Text style={style.item}>• Desafios diferentes e mais desafiadores</Text>
+          <Text style={style.item}>• Variedade nos desafios (mais desafiadores!)</Text>
           <Text style={style.item}>• Conteúdos e mídias digitais (acesso completo)</Text>
         </View>
 
