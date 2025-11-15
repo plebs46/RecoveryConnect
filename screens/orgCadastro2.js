@@ -3,8 +3,12 @@ import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import { MaskedTextInput } from 'react-native-mask-text';
 import { useSignup } from '../context/UserSignupContext';
+import { useState } from 'react';
 
 export default function OrgCadastro2({ navigation }) {
+  const [erroCep, setErroCep] = useState('');
+  const [cepTocado, setCepTocado] = useState(false);
+
   const {
     cep, setCep,
     rua, setRua,
@@ -13,6 +17,14 @@ export default function OrgCadastro2({ navigation }) {
     cidade, setCidade,
     estado, setEstado
   } = useSignup();
+
+  const formValido =
+    cep.trim().length > 0 &&
+    rua.trim().length > 0 &&
+    numero.trim().length > 0 &&
+    bairro.trim().length > 0 &&
+    cidade.trim().length > 0 &&
+    estado.trim().length > 0;
 
   return (
     <SafeAreaProvider>
@@ -28,7 +40,7 @@ export default function OrgCadastro2({ navigation }) {
               <Image source={require('../assets/arrowLeft.png')} style={{ marginRight: 20 }} />
             </TouchableOpacity>
             <Text style={est.title}>
-              Continue o cadastro!
+              Estamos na metade!
             </Text>
           </View>
           <Text style={{ fontSize: 16, marginBottom: 20, maxWidth: '80%', textAlign: 'center', fontWeight: 500 }}>
@@ -36,54 +48,78 @@ export default function OrgCadastro2({ navigation }) {
           </Text>
 
           <MaskedTextInput
-            mask="99999-999" 
+            mask="99999-999"
             keyboardType='numeric'
-            style={est.textBox} 
-            placeholder='CEP' 
+            style={[
+              est.textBox,
+              cepTocado && erroCep && { borderColor: 'red' }
+            ]}
+            placeholder='CEP'
             placeholderTextColor='lightGray'
             value={cep}
-            onChangeText={(masked) => {
-              setCep(masked);
+            onChangeText={(t) => {
+              setCep(t);
+              if (cepTocado) {
+                if (t.length < 9) setErroCep('CEP inválido');
+                else setErroCep('');
+              }
+            }}
+            onBlur={() => {
+              setCepTocado(true);
+              if (cep.length < 9) setErroCep('CEP inválido');
             }}
           />
-          <TextInput 
-            style={est.textBox} 
-            placeholder='Rua' 
+          {cepTocado && erroCep !== '' && (
+            <Text style={{ color: 'red', fontSize: 11, width: '80%', paddingLeft: 10 }}>
+              {erroCep}
+            </Text>
+          )}
+
+          <TextInput
+            style={est.textBox}
+            placeholder='Rua'
             placeholderTextColor='lightGray'
             value={rua}
             onChangeText={setRua}
           />
-          <TextInput 
-            style={est.textBox} 
-            placeholder='Bairro' 
+          <TextInput
+            style={est.textBox}
+            placeholder='Bairro'
             placeholderTextColor='lightGray'
             value={bairro}
             onChangeText={setBairro}
           />
-          <TextInput 
-            style={est.textBox} 
-            placeholder='Número' 
+          <TextInput
+            style={est.textBox}
+            placeholder='Número'
             placeholderTextColor='lightGray'
             value={numero}
             onChangeText={setNumero}
+            keyboardType='numeric'
           />
           <TextInput
             style={est.textBox}
-            placeholder='Cidade' 
+            placeholder='Cidade'
             placeholderTextColor='lightGray'
             value={cidade}
-            onChangeText={setCidade} 
+            onChangeText={setCidade}
           />
-          <TextInput 
-            style={est.textBox} 
-            placeholder='Estado' 
+          <TextInput
+            style={est.textBox}
+            placeholder='Estado'
             placeholderTextColor='lightGray'
             value={estado}
-            onChangeText={setEstado} 
+            onChangeText={setEstado}
           />
 
           <View style={est.buttonContainer}>
-            <TouchableOpacity style={est.button} onPress={() => navigation.navigate("OrgCadastro3")}>
+            <TouchableOpacity
+              style={[
+                est.button,
+                !formValido && { backgroundColor: '#cececeff', }
+              ]}
+              onPress={() => navigation.navigate("OrgCadastro3")}
+            >
               <Text style={{ alignSelf: 'center', fontWeight: 'bold', }}>Etapa 2 de 3</Text>
             </TouchableOpacity>
             <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: '30%' }}>

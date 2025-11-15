@@ -17,6 +17,7 @@ const diasSemana = [
 
 export default function OrgCadastro3({ navigation }) {
   const [loading, setLoading] = useState(false);
+  const [erroDias, setErroDias] = useState('');
 
   const {
     nome, tipo, cnpj, email, telefone, rede_social, senha, cep, rua, numero, bairro, cidade, estado
@@ -123,6 +124,19 @@ export default function OrgCadastro3({ navigation }) {
     );
   };
 
+  const validarDias = () => {
+    const temPeloMenosUm = dias.some((d) => d.selecionado);
+
+    if (!temPeloMenosUm) {
+      setErroDias("Selecione pelo menos um dia");
+      return false;
+    }
+
+    setErroDias('');
+    return true;
+  };
+
+
   return (
     <ScrollView>
       <View style={est.container}>
@@ -204,9 +218,22 @@ export default function OrgCadastro3({ navigation }) {
           </View>
         ))}
 
+        {erroDias !== '' && (
+          <Text style={{ color: 'red', marginTop: 5, marginBottom: 10 }}>{erroDias}</Text>
+        )}
+
         <View style={est.buttonContainer}>
-          <TouchableOpacity style={est.button} onPress={handleLog}>
-            <Text style={{ alignSelf: 'center', fontWeight: 'bold', }}>{loading ? 'Carregando...' : 'Finalizar'}</Text>
+          <TouchableOpacity
+            style={est.button}
+            onPress={() => {
+              if (validarDias()) {
+                handleLog();
+              }
+            }}
+          >
+            <Text style={{ alignSelf: 'center', fontWeight: 'bold', }}>
+              {loading ? 'Carregando...' : 'Finalizar'}
+            </Text>
           </TouchableOpacity>
           <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: '30%' }}>
             <Text style={est.textCadlog}>
@@ -223,7 +250,7 @@ export default function OrgCadastro3({ navigation }) {
           </View>
         </View>
       </View>
-    </ScrollView>
+    </ScrollView >
   );
 }
 

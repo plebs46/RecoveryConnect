@@ -19,6 +19,28 @@ export default function OrgCadastro1({ navigation }) {
   const [showPassword, setShowPassword] = useState(false);
   const [aceitou, setAceitou] = useState(false);
 
+  const [erroEmail, setErroEmail] = useState('');
+  const [emailTocado, setEmailTocado] = useState(false);
+
+  const [erroCnpj, setErroCnpj] = useState('');
+  const [cnpjTocado, setCnpjTocado] = useState(false);
+
+  const [erroTelefone, setErroTelefone] = useState('');
+  const [telefoneTocado, setTelefoneTocado] = useState(false);
+
+  const [erroSenha, setErroSenha] = useState('');
+  const [senhaTocada, setSenhaTocada] = useState(false);
+
+  const [erroConfirm, setErroConfirm] = useState('');
+  const [confirmTocada, setConfirmTocada] = useState(false);
+
+  const [confirmSenha, setConfirmSenha] = useState('');
+
+  const validarEmail = (email) => {
+    const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return regex.test(email);
+  };
+
   function handleCheck() {
     setAceitou((prev) => !prev);
   }
@@ -32,6 +54,21 @@ export default function OrgCadastro1({ navigation }) {
     rede_social, setRede_social,
     senha, setSenha
   } = useSignup();
+
+  const formValido =
+    nome.trim().length > 0 &&
+    email.trim().length > 0 &&
+    cnpj.trim().length > 0 &&
+    tipo.trim().length > 0 &&
+    telefone.trim().length > 0 &&
+    senha.trim().length > 0 &&
+    confirmSenha.trim().length > 0 &&
+    senha === confirmSenha &&
+    validarEmail(email) &&
+    aceitou &&
+    !erroEmail &&
+    !erroSenha &&
+    !erroConfirm;
 
   const [mask, setMask] = useState("(99) 99999-9999");
 
@@ -84,37 +121,94 @@ export default function OrgCadastro1({ navigation }) {
           <MaskedTextInput
             mask="99.999.999/9999-99"
             keyboardType='numeric'
-            style={est.textBox}
+            style={[
+              est.textBox,
+              erroCnpj && cnpjTocado ? { borderColor: 'red' } : {}
+            ]}
             placeholder='CNPJ'
             placeholderTextColor='lightGray'
             value={cnpj}
-            onChangeText={(masked) => {
+            onFocus={() => setCnpjTocado(true)}
+            onChangeText={(masked, unmasked) => {
               setCnpj(masked);
+
+              if (cnpjTocado) {
+                if (unmasked.length < 14) {
+                  setErroCnpj('CNPJ inválido');
+                } else {
+                  setErroCnpj('');
+                }
+              }
             }}
           />
+          {erroCnpj && cnpjTocado && (
+            <Text style={{ color: 'red', fontSize: 11, width: '80%', paddingLeft: 10 }}>
+              {erroCnpj}
+            </Text>
+          )}
+
           <TextInput
-            style={est.textBox}
+            style={[
+              est.textBox,
+              emailTocado && erroEmail && { borderColor: 'red' }
+            ]}
             placeholder='Email'
             placeholderTextColor='lightGray'
             value={email}
-            onChangeText={setEmail}
+            onChangeText={(t) => {
+              setEmail(t);
+              if (emailTocado) {
+                if (!validarEmail(t)) setErroEmail('E-mail inválido');
+                else setErroEmail('');
+              }
+            }}
+            onBlur={() => {
+              setEmailTocado(true);
+              if (!validarEmail(email)) setErroEmail('E-mail inválido');
+            }}
           />
+          {emailTocado && erroEmail !== '' && (
+            <Text style={{ color: 'red', fontSize: 11, width: '80%', paddingLeft: 10 }}>
+              {erroEmail}
+            </Text>
+          )}
+
           <MaskedTextInput
             mask={mask}
-            onChangeText={(masked, unmasked) => {
-              if (unmasked.length <= 10) {
-                setMask("(99) 9999-99999");
-              } else {
-                setMask("(99) 99999-9999");
-              }
-              setTelefone(masked);
-            }}
+            keyboardType="numeric"
             value={telefone}
-            style={est.textBox}
+            style={[
+              est.textBox,
+              erroTelefone && telefoneTocado ? { borderColor: 'red' } : {}
+            ]}
             placeholder="Telefone"
             placeholderTextColor="lightGray"
-            keyboardType="numeric"
+
+            onFocus={() => setTelefoneTocado(true)}
+
+            onChangeText={(masked, unmasked) => {
+              if (unmasked.length > 10) {
+                setMask("(99) 99999-9999");
+              } else {
+                setMask("(99) 9999-99999");
+              }
+              setTelefone(masked);
+
+              if (telefoneTocado) {
+                if (unmasked.length < 10) {
+                  setErroTelefone("Telefone inválido");
+                } else {
+                  setErroTelefone("");
+                }
+              }
+            }}
           />
+          {erroTelefone && telefoneTocado && (
+            <Text style={{ color: 'red', fontSize: 11, width: "80%", paddingLeft: 10 }}>
+              {erroTelefone}
+            </Text>
+          )}
+
           <TextInput
             style={est.textBox}
             placeholder='Rede Social (opcional)'
@@ -122,39 +216,79 @@ export default function OrgCadastro1({ navigation }) {
             value={rede_social}
             onChangeText={setRede_social}
           />
-          <View style={est.passwordContainer}>
+          <View style={[
+            est.passwordContainer,
+            senhaTocada && erroSenha && { borderColor: 'red' }
+          ]}>
             <TextInput
               style={est.passwordInput}
               placeholder='Crie sua Senha'
               placeholderTextColor='lightGray'
               secureTextEntry={!showPassword}
               value={senha}
-              onChangeText={setSenha}
+              onChangeText={(t) => {
+                setSenha(t);
+                if (senhaTocada) {
+                  if (t.length < 6) setErroSenha('A senha deve ter pelo menos 6 caracteres');
+                  else setErroSenha('');
+                }
+              }}
+              onBlur={() => {
+                setSenhaTocada(true);
+                if (senha.length < 6) setErroSenha('A senha deve ter pelo menos 6 caracteres');
+              }}
             />
+
             <TouchableOpacity
               style={est.eyeIcon}
               onPress={() => setShowPassword(!showPassword)}
             >
-              <Ionicons
-                name={showPassword ? "eye-off" : "eye"}
-                size={24}
-                color="gray"
-              />
+              <Ionicons name={showPassword ? "eye-off" : "eye"} size={24} color="gray" />
             </TouchableOpacity>
           </View>
-          <View style={est.passwordContainer}>
-            <TextInput style={est.passwordInput} placeholder='Confirme sua Nova Senha' placeholderTextColor='lightGray' secureTextEntry={!showPassword} />
+
+          {senhaTocada && erroSenha !== '' && (
+            <Text style={{ color: 'red', fontSize: 11, width: '80%', paddingLeft: 10 }}>
+              {erroSenha}
+            </Text>
+          )}
+
+          <View style={[
+            est.passwordContainer,
+            confirmTocada && erroConfirm && { borderColor: 'red' }
+          ]}>
+            <TextInput
+              style={est.passwordInput}
+              placeholder='Confirme sua Senha'
+              placeholderTextColor='lightGray'
+              secureTextEntry={!showPassword}
+              value={confirmSenha}
+              onChangeText={(t) => {
+                setConfirmSenha(t);
+                if (confirmTocada) {
+                  if (t !== senha) setErroConfirm('As senhas não coincidem');
+                  else setErroConfirm('');
+                }
+              }}
+              onBlur={() => {
+                setConfirmTocada(true);
+                if (confirmSenha !== senha) setErroConfirm('As senhas não coincidem');
+              }}
+            />
+
             <TouchableOpacity
               style={est.eyeIcon}
               onPress={() => setShowPassword(!showPassword)}
             >
-              <Ionicons
-                name={showPassword ? "eye-off" : "eye"}
-                size={24}
-                color="gray"
-              />
+              <Ionicons name={showPassword ? "eye-off" : "eye"} size={24} color="gray" />
             </TouchableOpacity>
           </View>
+
+          {confirmTocada && erroConfirm !== '' && (
+            <Text style={{ color: 'red', fontSize: 11, width: '80%', paddingLeft: 10 }}>
+              {erroConfirm}
+            </Text>
+          )}
 
           <View style={{ display: 'flex', flexDirection: 'row', justifyContent: 'center', alignItems: 'center', width: '70%' }}>
             <CheckBox
@@ -180,12 +314,12 @@ export default function OrgCadastro1({ navigation }) {
             </Text>
           </View>
 
-          <TouchableOpacity 
+          <TouchableOpacity
             style={[
               est.button,
-              !aceitou && { backgroundColor: '#cececeff', }
+              !formValido && { backgroundColor: '#cececeff', }
             ]}
-            disabled={!aceitou}   
+            disabled={!formValido}
             onPress={() => navigation.navigate('OrgCadastro2')}
           >
             <Text style={{ alignSelf: 'center', fontWeight: 'bold', }}>Etapa 1 de 3</Text>
