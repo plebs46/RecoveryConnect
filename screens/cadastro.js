@@ -104,6 +104,13 @@ export default function Cadastro({ navigation }) {
             ]}
             placeholder='E-mail'
             placeholderTextColor='lightGray'
+            autoCapitalize="none"
+            autoCorrect={false}
+            spellCheck={false}
+            keyboardType="email-address"
+            importantForAutofill="no"
+            autoComplete="off"
+            textContentType="none"
             value={email}
             onChangeText={(t) => {
               setEmail(t);
@@ -119,7 +126,7 @@ export default function Cadastro({ navigation }) {
           <View
             style={[
               est.passwordContainer,
-              !erroSenha && senhaTocada && { borderColor: 'red' }  
+              !erroSenha && senhaTocada && { borderColor: 'red' }
             ]}>
             <TextInput
               style={est.passwordInput}
@@ -183,7 +190,7 @@ export default function Cadastro({ navigation }) {
             <Text style={{ fontSize: 12 }}>Li e concordo com os
               <Text
                 style={{
-                  color: "#5ce1e6",       // azul claro
+                  color: "#5ce1e6",
                   textDecorationLine: "underline",
                   fontWeight: "500",
                 }}

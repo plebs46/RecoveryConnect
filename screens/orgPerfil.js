@@ -132,9 +132,31 @@ export default function OrgPerfil({ navigation }) {
   const [logoutConfirm, setLogoutConfirm] = useState(false);
   const [deleteConfirm, setDeleteConfirm] = useState(false);
 
+  useEffect(() => {
+    async function syncEmail() {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) return;
+
+      const { data: dados, error } = await supabase
+        .from("organizacao")
+        .select("email")
+        .eq("codigo", user.id)
+        .single();
+
+      if (!error && dados.email !== user.email) {
+        await supabase
+          .from("organizacao")
+          .update({ email: user.email })
+          .eq("codigo", user.id);
+      }
+    }
+
+    syncEmail();
+  }, []);
+
   if (!clinicaData) {
     return (
-      <View style={{display: 'flex', alignContent: 'center', justifyContent: 'center'}}>
+      <View style={{ display: 'flex', alignContent: 'center', justifyContent: 'center' }}>
         <Text>Carregando dados...</Text>
       </View>
     );
@@ -214,7 +236,7 @@ export default function OrgPerfil({ navigation }) {
   };
 
 
-  const { nome, logo, tipo, cnpj } = clinicaData;
+  const { nome, tipo, cnpj } = clinicaData;
   {/* Editar Dados */ }
   const handleEdit = (item, section) => {
     setIsEditing(item.id);
@@ -233,13 +255,6 @@ export default function OrgPerfil({ navigation }) {
 
       const userId = userData.user.id;
 
-      setClinicaData(prev => ({
-        ...prev,
-        [editSection]: prev[editSection].map(info =>
-          info.id === isEditing ? { ...info, valor: tempValue } : info
-        ),
-      }));
-
       if (editSection === "informacoes") {
         const fieldToUpdate = {
           1: "email",
@@ -249,12 +264,38 @@ export default function OrgPerfil({ navigation }) {
 
         if (!fieldToUpdate) return;
 
+        if (fieldToUpdate === "email") {
+          const { error: authError } = await supabase.auth.updateUser({
+            email: tempValue
+          });
+
+          if (authError) {
+            console.log("Erro Supabase Auth:", authError);
+            alert("Erro ao solicitar mudança de e-mail.");
+            return;
+          }
+
+          alert(
+            "Um link de confirmação foi enviado para o novo e-mail. Confirme para concluir a alteração."
+          );
+
+          return;
+        }
+
         const { error } = await supabase
           .from("organizacao")
           .update({ [fieldToUpdate]: tempValue })
           .eq("codigo", userId);
 
         if (error) console.log("Erro ao atualizar organização:", error);
+        if (!error) {
+          setClinicaData(prev => ({
+            ...prev,
+            informacoes: prev.informacoes.map(info =>
+              info.id === isEditing ? { ...info, valor: tempValue } : info
+            ),
+          }));
+        }
       }
 
       if (editSection === "endereco") {
@@ -275,6 +316,14 @@ export default function OrgPerfil({ navigation }) {
           .eq("codigo_org", userId);
 
         if (error) console.log("Erro ao atualizar endereço:", error);
+        if (!error) {
+          setClinicaData(prev => ({
+            ...prev,
+            endereco: prev.endereco.map(info =>
+              info.id === isEditing ? { ...info, valor: tempValue } : info
+            ),
+          }));
+        }
       }
 
     } catch (err) {

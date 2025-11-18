@@ -145,20 +145,59 @@ export default function Usuario({ navigation }) {
 
       const novoValor = tempValue;
 
-      const { error } = await supabase
-        .from('conta_usuario')
-        .update({ [fieldEditing]: novoValor })
-        .eq('id_usuario', user.id);
+      if (fieldEditing === "email") {
+        const { error } = await supabase.auth.updateUser({ email: novoValor });
 
-      if (error) console.log(error);
+        if (error) {
+          console.log(error);
+          alert("Erro ao atualizar email.");
+          return;
+        }
+
+        alert(
+          "Enviamos um link de confirmação para o novo email.\n" +
+          "O endereço só será atualizado após a confirmação."
+        );
+
+        return finalize();
+      }
+
+      if (fieldEditing === "senha") {
+        const { error } = await supabase.auth.updateUser({ password: novoValor });
+
+        if (error) {
+          console.log(error);
+          alert("Erro ao atualizar senha.");
+          return;
+        }
+
+        alert("Senha atualizada com sucesso!");
+        return finalize();
+      }
+
+      const { error: dbError } = await supabase
+        .from("conta_usuario")
+        .update({ [fieldEditing]: novoValor })
+        .eq("id_usuario", user.id);
+
+      if (dbError) {
+        console.log(dbError);
+        alert("Erro ao atualizar informações.");
+        return;
+      }
 
       setUserData(prev => ({ ...prev, [fieldEditing]: novoValor }));
-    } finally {
+      finalize();
+
+    } finally {}
+
+    function finalize() {
       setShowModal(false);
       setTempValue("");
       setFieldEditing(null);
     }
   }
+
 
   if (loading) {
     return (

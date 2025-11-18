@@ -11,6 +11,29 @@ export default function Diario({ navigation }) {
   const [diarioSelecionado, setDiarioSelecionado] = useState(null);
 
   useEffect(() => {
+    async function syncEmail() {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) return;
+
+      const { data: dados, error } = await supabase
+        .from("conta_usuario")
+        .select("email")
+        .eq("id_usuario", user.id)
+        .single();
+
+      if (!error && dados.email !== user.email) {
+        await supabase
+          .from("conta_usuario")
+          .update({ email: user.email })
+          .eq("id_usuario", user.id);
+      }
+    }
+
+    syncEmail();
+  }, []);
+
+
+  useEffect(() => {
     async function carregarDiarios() {
       const { data, error } = await supabase.auth.getSession();
       if (error || !data.session) {

@@ -235,6 +235,13 @@ export default function OrgCadastro1({ navigation }) {
             ]}
             placeholder='Email'
             placeholderTextColor='lightGray'
+            autoCapitalize="none"
+            autoCorrect={false}
+            spellCheck={false}
+            keyboardType="email-address"
+            importantForAutofill="no"
+            autoComplete="off"
+            textContentType="none"
             value={email}
             onChangeText={(t) => {
               setEmail(t);

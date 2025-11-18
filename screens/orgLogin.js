@@ -54,6 +54,13 @@ export default function OrgLogin({ navigation }) {
         placeholderTextColor='lightGray'
         value={email}
         onChangeText={setEmail}
+        autoCapitalize="none"
+        autoCorrect={false}
+        spellCheck={false}
+        keyboardType="email-address"
+        importantForAutofill="no"
+        autoComplete="off"
+        textContentType="none"
       />
 
       <View style={est.passwordContainer}>
