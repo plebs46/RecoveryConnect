@@ -26,6 +26,19 @@ export default function OrgCadastro2({ navigation }) {
     cidade.trim().length > 0 &&
     estado.trim().length > 0;
 
+  const buscarCep = async (cep) => {
+    const cepLimpo = cep.replace(/\D/g, '');
+    try {
+      const res = await fetch(`https://viacep.com.br/ws/${cepLimpo}/json/`);
+      const data = await res.json();
+      if (data.erro) return null;
+      return data;
+    } catch (err) {
+      return null;
+    }
+  };
+
+
   return (
     <SafeAreaProvider>
       <SafeAreaView style={{ flex: 1 }}>
@@ -59,16 +72,35 @@ export default function OrgCadastro2({ navigation }) {
             value={cep}
             onChangeText={(t) => {
               setCep(t);
+
               if (cepTocado) {
                 if (t.length < 9) setErroCep('CEP inválido');
                 else setErroCep('');
               }
             }}
-            onBlur={() => {
+            onBlur={async () => {
               setCepTocado(true);
-              if (cep.length < 9) setErroCep('CEP inválido');
+
+              if (cep.length < 9) {
+                setErroCep('CEP inválido');
+                return;
+              }
+
+              setErroCep('');
+
+              const dados = await buscarCep(cep);
+              if (!dados) {
+                setErroCep('CEP não encontrado');
+                return;
+              }
+
+              setRua(dados.logradouro || '');
+              setBairro(dados.bairro || '');
+              setCidade(dados.localidade || '');
+              setEstado(dados.uf || '');
             }}
           />
+
           {cepTocado && erroCep !== '' && (
             <Text style={{ color: 'red', fontSize: 11, width: '80%', paddingLeft: 10 }}>
               {erroCep}

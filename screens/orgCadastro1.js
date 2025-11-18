@@ -72,6 +72,61 @@ export default function OrgCadastro1({ navigation }) {
 
   const [mask, setMask] = useState("(99) 99999-9999");
 
+  function validarCNPJ(cnpj) {
+    cnpj = cnpj.replace(/[^\d]+/g, '');
+
+    if (cnpj.length !== 14) return false;
+
+    // Rejeita CNPJs inválidos conhecidos
+    if (/^(\d)\1{13}$/.test(cnpj)) return false;
+
+    let tamanho = cnpj.length - 2;
+    let numeros = cnpj.substring(0, tamanho);
+    let digitos = cnpj.substring(tamanho);
+    let soma = 0;
+    let pos = tamanho - 7;
+
+    for (let i = tamanho; i >= 1; i--) {
+      soma += numeros.charAt(tamanho - i) * pos--;
+      if (pos < 2) pos = 9;
+    }
+
+    let resultado = soma % 11 < 2 ? 0 : 11 - (soma % 11);
+    if (resultado != digitos.charAt(0)) return false;
+
+    tamanho += 1;
+    numeros = cnpj.substring(0, tamanho);
+    soma = 0;
+    pos = tamanho - 7;
+
+    for (let i = tamanho; i >= 1; i--) {
+      soma += numeros.charAt(tamanho - i) * pos--;
+      if (pos < 2) pos = 9;
+    }
+
+    resultado = soma % 11 < 2 ? 0 : 11 - (soma % 11);
+    if (resultado != digitos.charAt(1)) return false;
+
+    return true;
+  }
+
+  async function verificarExistenciaCNPJ(cnpj) {
+    const somenteNumeros = cnpj.replace(/[^\d]+/g, '');
+
+    try {
+      const response = await fetch(`https://www.receitaws.com.br/v1/cnpj/${somenteNumeros}`);
+      const data = await response.json();
+
+      if (data.status === "ERROR") {
+        return false;
+      }
+
+      return true;
+    } catch (e) {
+      return false;
+    }
+  }
+
   return (
     <SafeAreaProvider>
       <SafeAreaView style={{ flex: 1 }}>
@@ -129,18 +184,44 @@ export default function OrgCadastro1({ navigation }) {
             placeholderTextColor='lightGray'
             value={cnpj}
             onFocus={() => setCnpjTocado(true)}
-            onChangeText={(masked, unmasked) => {
+            onChangeText={async (masked, unmasked) => {
               setCnpj(masked);
 
               if (cnpjTocado) {
-                if (unmasked.length < 14) {
+                // 1 — valida CNPJ matematicamente
+                if (!validarCNPJ(masked)) {
                   setErroCnpj('CNPJ inválido');
+                  return;
+                }
+
+                // 2 — valida existência com API
+                const existe = await verificarExistenciaCNPJ(masked);
+
+                if (!existe) {
+                  setErroCnpj('CNPJ não encontrado na Receita Federal');
                 } else {
                   setErroCnpj('');
                 }
               }
             }}
+            onBlur={async () => {
+              setCnpjTocado(true);
+
+              if (!validarCNPJ(cnpj)) {
+                setErroCnpj('CNPJ inválido');
+                return;
+              }
+
+              const existe = await verificarExistenciaCNPJ(cnpj);
+
+              if (!existe) {
+                setErroCnpj('CNPJ não encontrado na Receita Federal');
+              } else {
+                setErroCnpj('');
+              }
+            }}
           />
+
           {erroCnpj && cnpjTocado && (
             <Text style={{ color: 'red', fontSize: 11, width: '80%', paddingLeft: 10 }}>
               {erroCnpj}
