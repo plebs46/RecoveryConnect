@@ -51,7 +51,7 @@ export default function OrgLogin({ navigation }) {
       <TextInput
         style={est.textBox}
         placeholder='Email'
-        placeholderTextColor='lightGray'
+        placeholderTextColor='#888'
         value={email}
         onChangeText={setEmail}
         autoCapitalize="none"
