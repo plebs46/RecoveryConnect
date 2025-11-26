@@ -25,13 +25,19 @@
           "apiKey": "AIzaSyAEhib2Ir3C_CYfOddPWppIR9To3oCcjIU"
         }
       },
-      "edgeToEdgeEnabled": true
+      "edgeToEdgeEnabled": true,
+      "package": "com.hikaru17.RecoveryConnect"
     },
     "web": {
       "favicon": "./assets/favicon.png"
     },
     "plugins": [
       "expo-font"
-    ]
+    ],
+    "extra": {
+      "eas": {
+        "projectId": "e13b3ac5-3de3-4832-b507-55dbd35e1741"
+      }
+    }
   }
 }
