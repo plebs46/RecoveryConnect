@@ -96,14 +96,14 @@ export default function Cadastro({ navigation }) {
 
           <Text style={est.title}>Crie a sua conta!</Text>
 
-          <TextInput style={est.textBox} placeholder='Nome de Usuário' placeholderTextColor='lightGray' value={nome} onChangeText={setNome} />
+          <TextInput style={est.textBox} placeholder='Nome de Usuário' placeholderTextColor='#888' value={nome} onChangeText={setNome} />
           <TextInput
             style={[
               est.textBox,
               erroEmail && { borderColor: 'red' }
             ]}
             placeholder='E-mail'
-            placeholderTextColor='lightGray'
+            placeholderTextColor='#888'
             autoCapitalize="none"
             autoCorrect={false}
             spellCheck={false}
@@ -121,7 +121,7 @@ export default function Cadastro({ navigation }) {
           {erroEmail.length > 0 && (
             <Text style={{ color: 'red', fontSize: 11, width: '80%', paddingLeft: 10 }}>{erroEmail}</Text>
           )}
-          <TextInput style={est.textBox} placeholder='Cidade' placeholderTextColor='lightGray' value={cidade} onChangeText={setCidade} />
+          <TextInput style={est.textBox} placeholder='Cidade' placeholderTextColor='#888' value={cidade} onChangeText={setCidade} />
 
           <View
             style={[
@@ -131,7 +131,7 @@ export default function Cadastro({ navigation }) {
             <TextInput
               style={est.passwordInput}
               placeholder='Crie sua Senha'
-              placeholderTextColor='lightGray'
+              placeholderTextColor='#888'
               secureTextEntry={!showPassword}
               value={senha}
               onFocus={() => setSenhaTocada(true)}
@@ -160,7 +160,7 @@ export default function Cadastro({ navigation }) {
             <TextInput
               style={est.passwordInput}
               placeholder='Confirme sua Nova Senha'
-              placeholderTextColor='lightGray'
+              placeholderTextColor='#888'
               secureTextEntry={!showPassword}
               value={confirmSenha}
               onFocus={() => setSenhaConfTocada(true)}
@@ -268,6 +268,7 @@ const est = StyleSheet.create({
     flex: 1,
     height: 40,
     paddingHorizontal: 20,
+    color: '#141414ff'
   },
   eyeIcon: {
     paddingHorizontal: 10,

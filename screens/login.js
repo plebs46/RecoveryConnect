@@ -51,7 +51,7 @@ export default function Login({ navigation }) {
       <TextInput
         style={est.textBox}
         placeholder='E-mail'
-        placeholderTextColor='lightGray'
+        placeholderTextColor='#888'
         value={email}
         onChangeText={setEmail}
         autoCapitalize="none"
@@ -64,7 +64,10 @@ export default function Login({ navigation }) {
       />
 
       <View style={est.passwordContainer}>
-        <TextInput style={est.passwordInput} placeholder='Senha' placeholderTextColor='lightGray'
+        <TextInput 
+          style={est.passwordInput} 
+          placeholder='Senha'
+          placeholderTextColor='#888'
           secureTextEntry={!showPassword}
           value={senha}
           onChangeText={setSenha}
@@ -183,6 +186,7 @@ const est = StyleSheet.create({
     flex: 1,
     height: 40,
     paddingHorizontal: 17,
+    color: '#141414ff'
   },
   textBox: {
     borderRadius: 10,

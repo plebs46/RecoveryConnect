@@ -18,7 +18,6 @@ import Usuario from './usuario';
 import UsuarioAssinatura from './usuarioAssinatura';
 import UsuarioDados from './usuarioDados';
 import UsuarioSubstancias from './usuarioSubstancias';
-import InfMedico from './infMedico';
 
 import OrgLogin from './orgLogin';
 import OrgCadastro1 from './orgCadastro1';
@@ -45,8 +44,7 @@ export {
   DiarioNovo,
 
   ConsultasFuturas,
-  InfMedico,
-
+  
   Midia,
 
   Desafios,

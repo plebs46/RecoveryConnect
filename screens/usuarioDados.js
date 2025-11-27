@@ -76,7 +76,7 @@ export default function UsuarioDados({ navigation }) {
               tocadoAtual && erroAtual ? { borderColor: "red" } : {}
             ]}
             placeholder="Digite sua senha atual"
-            placeholderTextColor="lightGray"
+            placeholderTextColor='#888'
             secureTextEntry={!showPassword}
             value={senhaAtual}
             onFocus={() => setTocadoAtual(true)}
@@ -113,7 +113,7 @@ export default function UsuarioDados({ navigation }) {
               tocadoNova && erroNova ? { borderColor: "red" } : {}
             ]}
             placeholder="Digite a nova senha"
-            placeholderTextColor="lightGray"
+            placeholderTextColor='#888'
             secureTextEntry={!showPassword}
             value={novaSenha}
             onFocus={() => setTocadoNova(true)}
@@ -144,7 +144,7 @@ export default function UsuarioDados({ navigation }) {
               tocadoConfirma && erroConfirma ? { borderColor: "red" } : {}
             ]}
             placeholder="Confirme a nova senha"
-            placeholderTextColor="lightGray"
+            placeholderTextColor='#888'
             secureTextEntry={!showPassword}
             value={confirmaSenha}
             onFocus={() => setTocadoConfirma(true)}
@@ -215,6 +215,7 @@ const est = StyleSheet.create({
     flex: 1,
     height: 40,
     paddingHorizontal: 17,
+    color: '#141414ff'
   },
   label: {
     fontWeight: 'bold',

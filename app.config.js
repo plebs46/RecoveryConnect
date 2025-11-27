@@ -22,7 +22,7 @@ export default {
 
     android: {
       adaptiveIcon: {
-        foregroundImage: "./assets/adaptive-icon.png",
+        foregroundImage: "./assets/RecoveryConnect.png",
         backgroundColor: "#ffffff"
       },
       config: {
@@ -35,7 +35,7 @@ export default {
     },
 
     web: {
-      favicon: "./assets/favicon.png"
+      favicon: "./assets/RecoveryConnect.png"
     },
 
     plugins: [

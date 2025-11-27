@@ -53,10 +53,8 @@ export default function ClinicasMapa() {
         ];
 
         const clinicasFormatadas = data.map((item) => {
-          // Agrupar horários iguais
           const horarios = item.organizacao_horarios || [];
 
-          // Cria um mapa onde a chave é "hora_inicio - hora_fim" e o valor é uma lista de dias
           const grupos = {};
           horarios.forEach((h) => {
             const faixa = `${h.hora_inicio.slice(0, 5)} - ${h.hora_fim.slice(0, 5)}`;
@@ -64,7 +62,6 @@ export default function ClinicasMapa() {
             grupos[faixa].push(h.dia_semana);
           });
 
-          // Função auxiliar pra juntar dias de forma natural
           const formatarDias = (dias) => {
             const ordem = ['segunda', 'terça', 'quarta', 'quinta', 'sexta', 'sábado', 'domingo'];
             dias.sort((a, b) => ordem.indexOf(a) - ordem.indexOf(b));
@@ -74,7 +71,6 @@ export default function ClinicasMapa() {
             return `${dias[0]} a ${dias[dias.length - 1]}`;
           };
 
-          // Montar texto final de horários
           const horariosTexto =
             Object.keys(grupos).length > 0
               ? Object.entries(grupos)

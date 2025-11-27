@@ -110,21 +110,21 @@ export default function OrgCadastro2({ navigation }) {
           <TextInput
             style={est.textBox}
             placeholder='Rua'
-            placeholderTextColor='lightGray'
+            placeholderTextColor='#888'
             value={rua}
             onChangeText={setRua}
           />
           <TextInput
             style={est.textBox}
             placeholder='Bairro'
-            placeholderTextColor='lightGray'
+            placeholderTextColor='#888'
             value={bairro}
             onChangeText={setBairro}
           />
           <TextInput
             style={est.textBox}
             placeholder='Número'
-            placeholderTextColor='lightGray'
+            placeholderTextColor='#888'
             value={numero}
             onChangeText={setNumero}
             keyboardType='numeric'
@@ -132,14 +132,14 @@ export default function OrgCadastro2({ navigation }) {
           <TextInput
             style={est.textBox}
             placeholder='Cidade'
-            placeholderTextColor='lightGray'
+            placeholderTextColor='#888'
             value={cidade}
             onChangeText={setCidade}
           />
           <TextInput
             style={est.textBox}
             placeholder='Estado'
-            placeholderTextColor='lightGray'
+            placeholderTextColor='#888'
             value={estado}
             onChangeText={setEstado}
           />

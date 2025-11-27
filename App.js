@@ -3,7 +3,7 @@ import { createStackNavigator } from '@react-navigation/stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import {
   OrgLogin, TipoUser, Login, Cadastro, Escolha, Tutorial1, Tutorial2, Tutorial3, Tutorial4,
-  Diario, DiarioNovo, ConsultasFuturas, InfMedico, Midia, Desafios, DesafiosNovo, DesafiosDetalhes,
+  Diario, DiarioNovo, ConsultasFuturas, Midia, Desafios, DesafiosNovo, DesafiosDetalhes,
   Usuario, UsuarioAssinatura, UsuarioDados, UsuarioSubstancias, OrgCadastro1, OrgCadastro2, OrgCadastro3, OrgEspera,
   OrgPerfil, OrgPerfilDias, OrgPerfilSenhaEdit,
 } from './screens/files';
@@ -182,11 +182,6 @@ function ConsultasStackNavigator() {
       <Stack.Screen
         name="ConsultasFuturas"
         component={ConsultasFuturas}
-        options={{ headerShown: false }}
-      />
-      <Stack.Screen
-        name="InfMedico"
-        component={InfMedico}
         options={{ headerShown: false }}
       />
     </Stack.Navigator>

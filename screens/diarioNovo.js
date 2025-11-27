@@ -178,6 +178,7 @@ export default function DiarioNovo({ navigation }) {
               multiline={true}
               numberOfLines={5}
               placeholder="Anote qualquer coisa aqui..."
+              placeholderTextColor='#888'
               value={respostaCmnt}
               onChangeText={setRespostaCmnt}
             />

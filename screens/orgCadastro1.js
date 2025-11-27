@@ -151,7 +151,7 @@ export default function OrgCadastro1({ navigation }) {
           <TextInput
             style={est.textBox}
             placeholder='Nome de Usuário / Nome da Organização'
-            placeholderTextColor='lightGray'
+            placeholderTextColor='#888'
             value={nome}
             onChangeText={setNome}
           />
@@ -181,7 +181,7 @@ export default function OrgCadastro1({ navigation }) {
               erroCnpj && cnpjTocado ? { borderColor: 'red' } : {}
             ]}
             placeholder='CNPJ'
-            placeholderTextColor='lightGray'
+            placeholderTextColor='#888'
             value={cnpj}
             onFocus={() => setCnpjTocado(true)}
             onChangeText={async (masked, unmasked) => {
@@ -234,7 +234,7 @@ export default function OrgCadastro1({ navigation }) {
               emailTocado && erroEmail && { borderColor: 'red' }
             ]}
             placeholder='Email'
-            placeholderTextColor='lightGray'
+            placeholderTextColor='#888'
             autoCapitalize="none"
             autoCorrect={false}
             spellCheck={false}
@@ -270,7 +270,7 @@ export default function OrgCadastro1({ navigation }) {
               erroTelefone && telefoneTocado ? { borderColor: 'red' } : {}
             ]}
             placeholder="Telefone"
-            placeholderTextColor="lightGray"
+            placeholderTextColor='#888'
 
             onFocus={() => setTelefoneTocado(true)}
 
@@ -300,7 +300,7 @@ export default function OrgCadastro1({ navigation }) {
           <TextInput
             style={est.textBox}
             placeholder='Rede Social (opcional)'
-            placeholderTextColor='lightGray'
+            placeholderTextColor='#888'
             value={rede_social}
             onChangeText={setRede_social}
           />
@@ -311,7 +311,7 @@ export default function OrgCadastro1({ navigation }) {
             <TextInput
               style={est.passwordInput}
               placeholder='Crie sua Senha'
-              placeholderTextColor='lightGray'
+              placeholderTextColor='#888'
               secureTextEntry={!showPassword}
               value={senha}
               onChangeText={(t) => {
@@ -348,7 +348,7 @@ export default function OrgCadastro1({ navigation }) {
             <TextInput
               style={est.passwordInput}
               placeholder='Confirme sua Senha'
-              placeholderTextColor='lightGray'
+              placeholderTextColor='#888'
               secureTextEntry={!showPassword}
               value={confirmSenha}
               onChangeText={(t) => {
@@ -522,6 +522,7 @@ const est = StyleSheet.create({
     flex: 1,
     height: 40,
     paddingHorizontal: 20,
+    color: '#141414ff'
   },
   senhaReq: {
     fontSize: 12,
